@@ -50,9 +50,10 @@ type CPU6502 struct {
 	Memory [0x10000]byte
 }
 
-var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func([256]func(cpu *CPU6502)) {
+var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func([256]func(cpu *CPU6502)){
 	// 0x00 BRK
 	func(cpu *CPU6502) {
+		// authored
 		// Increment PC to point to the next instruction after BRK
 		cpu.PC++
 
@@ -76,24 +77,24 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func([256]func(cpu *CPU65
 	},
 	// 0x01 ORA, (indirect, X)
 	func(cpu *CPU6502) {
-		// Getting initial address from arguments
-		address := cpu.Memory[cpu.PC + 1] + cpu.X
+		// Getting initial zero-page address from arguments
+		zeroPageAddress := uint16(cpu.Memory[cpu.PC+1] + cpu.X)
 
 		// Get the OR argument address remembering that least significant byte is first
-		address := cpu.Memory[address + 1] * 0x100 + cpu.Memory[address]
+		address := uint16(cpu.Memory[address+1]<<8) + uint16(cpu.Memory[address])
 
 		// Performing the bitwise OR
-		cpu.A = cpu.Memory[address] | cpu.A
+		cpu.A |= cpu.Memory[address]
 
 		// Setting zero flag if result is zero
 		cpu.Z = cpu.A == 0
 
 		// Setting negative flag if result can be interpreted as bitewise negative value
 		// maximum bit is set to one
-		cpu.N = cpu.A >= 128
+		cpu.N = (cpu.A & 0x80) != 0
 
 		cpu.PC += 2
-	}
+	},
 }
 
 // NewCPU6502 creates and initializes new 6502 CPU emulator instance
@@ -114,3 +115,33 @@ func NewCPU6502() *CPU6502 {
 	}
 }
 
+// byteToStatusByte converts CPU status to byte format
+// authored by chatGPT
+func byteToStatusByte(cpu *CPU6502) uint8 {
+	status := uint8(0x20) // Bit 5 is always set for the 6502
+	if cpu.N {
+		status |= 0x80
+	}
+	if cpu.V {
+		status |= 0x40
+	}
+	if cpu.U {
+		status |= 0x20
+	}
+	if cpu.B {
+		status |= 0x10
+	}
+	if cpu.D {
+		status |= 0x08
+	}
+	if cpu.I {
+		status |= 0x04
+	}
+	if cpu.Z {
+		status |= 0x02
+	}
+	if cpu.C {
+		status |= 0x01
+	}
+	return status
+}
