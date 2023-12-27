@@ -50,6 +50,52 @@ type CPU6502 struct {
 	Memory [0x10000]byte
 }
 
+var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func([256]func(cpu *CPU6502)) {
+	// 0x00 BRK
+	func(cpu *CPU6502) {
+		// Increment PC to point to the next instruction after BRK
+		cpu.PC++
+
+		// Push PC High Byte onto Stack
+		cpu.Memory[0x0100+uint16(cpu.SP)] = uint8((cpu.PC >> 8) & 0xFF)
+		cpu.SP--
+
+		// Push PC Low Byte onto Stack
+		cpu.Memory[0x0100+uint16(cpu.SP)] = uint8(cpu.PC & 0xFF)
+		cpu.SP--
+
+		// Set Break flag (B) and push status onto Stack
+		cpu.Memory[0x0100+uint16(cpu.SP)] = byteToStatusByte(cpu) | 0x10 // Set B flag
+		cpu.SP--
+
+		// Set Interrupt Disable (I) flag
+		cpu.I = true
+
+		// Load Interrupt Vector (0xFFFE/F) into PC for Interrupt Service Routine (ISR)
+		cpu.PC = uint16(cpu.Memory[0xFFFF])<<8 | uint16(cpu.Memory[0xFFFE])
+	},
+	// 0x01 ORA, (indirect, X)
+	func(cpu *CPU6502) {
+		// Getting initial address from arguments
+		address := cpu.Memory[cpu.PC + 1] + cpu.X
+
+		// Get the OR argument address remembering that least significant byte is first
+		address := cpu.Memory[address + 1] * 0x100 + cpu.Memory[address]
+
+		// Performing the bitwise OR
+		cpu.A = cpu.Memory[address] | cpu.A
+
+		// Setting zero flag if result is zero
+		cpu.Z = cpu.A == 0
+
+		// Setting negative flag if result can be interpreted as bitewise negative value
+		// maximum bit is set to one
+		cpu.N = cpu.A >= 128
+
+		cpu.PC += 2
+	}
+}
+
 // NewCPU6502 creates and initializes new 6502 CPU emulator instance
 func NewCPU6502() *CPU6502 {
 	return &CPU6502{
@@ -67,3 +113,4 @@ func NewCPU6502() *CPU6502 {
 		Memory: [0x10000]byte{},
 	}
 }
+
