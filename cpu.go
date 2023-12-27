@@ -71,24 +71,6 @@ func (cpu *CPU6502) ora(arg uint8) {
 		cpu.PC += 1
 }
 
-// zeroPageX is used to get argument for operation using (zero page + X) addressing mode.
-// Updates PC 
-func (cpu *CPU6502) zeroPageX() uint8 {
-	cpu.PC += 1
-	// Getting  zero-page address from argument
-	return cpu.Memory[cpu.PC] + cpu.X
-}
-
-// indexedIndirect is used to get argument for operation using indexedIndirect
-// addressing. Updates PC
-func (cpu *CPU6502) indexedIndirect() uint8 {
-	// Getting initial address using zeropage, X adrressing
-	address := cpu.zeroPageX()
-
-	// Get the argument address remembering that least significant byte is first
-	return cpu.Memory(uint16(cpu.Memory[address+1]<<8) + uint16(cpu.Memory[address]))
-}
-
 var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func([256]func(cpu *CPU6502)){
 	// 0x00 BRK
 	func(cpu *CPU6502) {
@@ -123,7 +105,11 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func([256]func(cpu *CPU65
 	// 0x03 is not defined, assign NOP function
 	nop,
 	// 0x04 is not defined, assign NOP function
-	nop
+	nop,
+	// 0x05 ORA, zero page
+	func(cpu *CPU6502) {
+		cpu.ora(cpu.zeroPage())
+	}
 }
 
 // NewCPU6502 creates and initializes new 6502 CPU emulator instance
