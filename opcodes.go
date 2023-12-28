@@ -45,6 +45,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.ora(cpu.absolute())
 	},
+	// 0x0e ASL, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.asl)
+	},
 	nop,
 	nop,
 	// 0x1-

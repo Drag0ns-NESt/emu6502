@@ -1,5 +1,17 @@
 package emu6502
 
+// absoluteAddress returns next operation argument address using absolute
+// addressing mode. Updates PC
+func (cpu *CPU6502) absoluteAddress() uint16 {
+	cpu.PC += 1
+	lower := uint16(cpu.Memory[cpu.PC])
+
+	cpu.PC += 1
+	higher := uint16(cpu.Memory[cpu.PC])
+
+	return higher<<8 | lower
+}
+
 // immediate is used to get argument for operation using immediate addressing mode
 // just getting value of the byte next to the opcode. Updates PC
 func (cpu *CPU6502) immediate() uint8 {
@@ -11,13 +23,7 @@ func (cpu *CPU6502) immediate() uint8 {
 // absolute is used to get argument for operation using absolute addressing mode
 // getting value from 2-byte address. Updates PC
 func (cpu *CPU6502) absolute() uint8 {
-	cpu.PC += 1
-	lower := uint16(cpu.Memory[cpu.PC])
-
-	cpu.PC += 1
-	higher := uint16(cpu.Memory[cpu.PC])
-
-	return cpu.Memory[higher<<8|lower]
+	return cpu.Memory[cpu.absoluteAddress()]
 }
 
 // zeroPage is used to get argument for operation using zero page addressing mode.
@@ -52,6 +58,13 @@ func (cpu *CPU6502) indexedIndirect() uint8 {
 // storing result using accumulator register
 func (cpu *CPU6502) executeWithAccumulator(operation func(value uint8) uint8) {
 	cpu.A = operation(cpu.A)
+}
+
+// executeWithAbsolute is used for operations for performing operations and than
+// storing result using zeropage address
+func (cpu *CPU6502) executeWithAbsolute(operation func(value uint8) uint8) {
+	address := cpu.absoluteAddress()
+	cpu.Memory[address] = operation(cpu.Memory[address])
 }
 
 // executeWithZeroPage is used for operations for performing operations and than
