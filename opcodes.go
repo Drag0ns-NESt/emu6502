@@ -21,7 +21,7 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x06 ASL, zero page
 	func(cpu *CPU6502) {
-		cpu.executeZeroPage(cpu.asl)
+		cpu.executeWithZeroPage(cpu.asl)
 	},
 	// 0x07 is not defined, assign NOP function
 	nop,
@@ -29,9 +29,14 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.php()
 	},
-	nop,
-	nop,
-	nop,
+	// 0x09 ORA, immediate
+	func(cpu *CPU6502) {
+		cpu.ora(cpu.immediate())
+	},
+	// 0x0a ASL, accumulator
+	func(cpu *CPU6502) {
+		cpu.executeWithAccumulator(cpu.asl)
+	},
 	nop,
 	nop,
 	nop,

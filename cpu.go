@@ -93,23 +93,26 @@ func (cpu *CPU6502) ora(arg uint8) {
 
 const STACK_BOTTOM = 0x100
 
+// pushToStack pushes a given value to stack
+func (cpu *CPU6502) pushToStack(value uint8) {
+	cpu.Memory[STACK_BOTTOM+uint16(cpu.SP)] = value
+	cpu.SP--
+}
+
 // brk executes BRK instruction
 func (cpu *CPU6502) brk() {
-	// authored by chatGPT
+	// coauthored by chatGPT
 	// Increment PC to point to the next instruction after BRK
 	cpu.PC++
 
 	// Push PC High Byte onto Stack
-	cpu.Memory[STACK_BOTTOM + uint16(cpu.SP)] = uint8((cpu.PC >> 8) & 0xFF)
-	cpu.SP--
+	cpu.pushToStack(uint8((cpu.PC >> 8) & 0xFF))
 
 	// Push PC Low Byte onto Stack
-	cpu.Memory[STACK_BOTTOM + 0x0100+uint16(cpu.SP)] = uint8(cpu.PC & 0xFF)
-	cpu.SP--
+	cpu.pushToStack(uint8(cpu.PC & 0xFF))
 
 	// Set Break flag (B) and push status onto Stack
-	cpu.Memory[STACK_BOTTOM + 0x0100+uint16(cpu.SP)] = cpuStatusToByte(cpu) | 0x10 // Set B flag
-	cpu.SP--
+	cpu.pushToStack(cpuStatusToByte(cpu) | 0x10)
 
 	// Set Interrupt Disable (I) flag
 	cpu.I = true
@@ -121,8 +124,7 @@ func (cpu *CPU6502) brk() {
 // php executes PHP instruction pushing status register to stack
 func (cpu *CPU6502) php() {
 	cpu.PC += 1
-	
-	cpu.Memory[]
+	cpu.pushToStack(cpuStatusToByte(cpu))
 }
 
 // NewCPU6502 creates and initializes new 6502 CPU emulator instance

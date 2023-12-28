@@ -1,5 +1,13 @@
 package emu6502
 
+// immediate is used to get argument for operation using immediate addressing mode
+// just getting value of the byte next to the opcode. Updates PC
+func (cpu *CPU6502) immediate() uint8 {
+	cpu.PC += 1
+
+	return cpu.Memory[cpu.PC]
+}
+
 // zeroPage is used to get argument for operation using zero page addressing mode.
 // Updates PC
 func (cpu *CPU6502) zeroPage() uint8 {
@@ -28,9 +36,15 @@ func (cpu *CPU6502) indexedIndirect() uint8 {
 	return cpu.Memory[uint16(cpu.Memory[address+1]<<8)+uint16(cpu.Memory[address])]
 }
 
-// executeZeroPage is used for operations for performing operations and than
+// executeWithAccumulator is used for operations for performing operations and than
+// storing result using accumulator register
+func (cpu *CPU6502) executeWithAccumulator(operation func(value uint8) uint8) {
+	cpu.A = operation(cpu.A)
+}
+
+// executeWithZeroPage is used for operations for performing operations and than
 // storing result using zeropage address
-func (cpu *CPU6502) executeZeroPage(operation func(value uint8) uint8) {
+func (cpu *CPU6502) executeWithZeroPage(operation func(value uint8) uint8) {
 	cpu.PC += 1
 
 	// Get the address once so that we can use it for both lookup and store
