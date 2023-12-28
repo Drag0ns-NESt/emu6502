@@ -55,6 +55,23 @@ func nop(cpu *CPU6502) {
 	cpu.PC++
 }
 
+// asl performs Arithmetic Shift Left operation on the provided value
+func (cpu *CPU6502) asl(value uint8) uint8 {
+	// Set the Carry flag if the most significant bit (bit 7) is 1, otherwise clear it
+	cpu.C = (value & 0x80) != 0
+
+	// Perform the shift left operation
+	shiftedValue := value << 1
+
+	// Update the Zero flag if the result is zero
+	cpu.Z = shiftedValue == 0
+
+	// Update the Negative flag based on bit 7 of the shifted value
+	cpu.N = (shiftedValue & 0x80) != 0
+
+	return value << 1
+}
+
 // ora executes ORA instruction performing bitwise OR for A register and a
 // given argument
 func (cpu *CPU6502) ora(arg uint8) {
