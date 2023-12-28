@@ -37,9 +37,14 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.executeWithAccumulator(cpu.asl)
 	},
+	// 0x0b is not defined, assign NOP function
 	nop,
+	// 0x0c is not defined, assign NOP function
 	nop,
-	nop,
+	// 0x0d ORA, absolute
+	func(cpu *CPU6502) {
+		cpu.ora(cpu.absolute())
+	},
 	nop,
 	nop,
 	// 0x1-

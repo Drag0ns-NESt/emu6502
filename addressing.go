@@ -8,6 +8,18 @@ func (cpu *CPU6502) immediate() uint8 {
 	return cpu.Memory[cpu.PC]
 }
 
+// absolute is used to get argument for operation using absolute addressing mode
+// getting value from 2-byte address. Updates PC
+func (cpu *CPU6502) absolute() uint8 {
+	cpu.PC += 1
+	lower := uint16(cpu.Memory[cpu.PC])
+
+	cpu.PC += 1
+	higher := uint16(cpu.Memory[cpu.PC])
+
+	return cpu.Memory[higher<<8|lower]
+}
+
 // zeroPage is used to get argument for operation using zero page addressing mode.
 // Updates PC
 func (cpu *CPU6502) zeroPage() uint8 {
