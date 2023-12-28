@@ -3,27 +3,7 @@ package emu6502
 var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	// 0x00 BRK
 	func(cpu *CPU6502) {
-		// authored by chatGPT
-		// Increment PC to point to the next instruction after BRK
-		cpu.PC++
-
-		// Push PC High Byte onto Stack
-		cpu.Memory[0x0100+uint16(cpu.SP)] = uint8((cpu.PC >> 8) & 0xFF)
-		cpu.SP--
-
-		// Push PC Low Byte onto Stack
-		cpu.Memory[0x0100+uint16(cpu.SP)] = uint8(cpu.PC & 0xFF)
-		cpu.SP--
-
-		// Set Break flag (B) and push status onto Stack
-		cpu.Memory[0x0100+uint16(cpu.SP)] = cpuStatusToByte(cpu) | 0x10 // Set B flag
-		cpu.SP--
-
-		// Set Interrupt Disable (I) flag
-		cpu.I = true
-
-		// Load Interrupt Vector (0xFFFE/F) into PC for Interrupt Service Routine (ISR)
-		cpu.PC = uint16(cpu.Memory[0xFFFF])<<8 | uint16(cpu.Memory[0xFFFE])
+		cpu.brk()
 	},
 	// 0x01 ORA, (indirect, X)
 	func(cpu *CPU6502) {
@@ -43,7 +23,12 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.executeZeroPage(cpu.asl)
 	},
+	// 0x07 is not defined, assign NOP function
 	nop,
+	// 0x08 PHP
+	func(cpu *CPU6502) {
+		cpu.php()
+	},
 	nop,
 	nop,
 	nop,

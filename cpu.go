@@ -57,6 +57,7 @@ func nop(cpu *CPU6502) {
 
 // asl performs Arithmetic Shift Left operation on the provided value
 func (cpu *CPU6502) asl(value uint8) uint8 {
+	// coauthored with chatGPT
 	// Set the Carry flag if the most significant bit (bit 7) is 1, otherwise clear it
 	cpu.C = (value & 0x80) != 0
 
@@ -69,7 +70,9 @@ func (cpu *CPU6502) asl(value uint8) uint8 {
 	// Update the Negative flag based on bit 7 of the shifted value
 	cpu.N = (shiftedValue & 0x80) != 0
 
-	return value << 1
+	// Update program counter
+	cpu.PC += 1
+	return shiftedValue
 }
 
 // ora executes ORA instruction performing bitwise OR for A register and a
@@ -86,6 +89,40 @@ func (cpu *CPU6502) ora(arg uint8) {
 	cpu.N = (cpu.A & 0x80) != 0
 
 	cpu.PC += 1
+}
+
+const STACK_BOTTOM = 0x100
+
+// brk executes BRK instruction
+func (cpu *CPU6502) brk() {
+	// authored by chatGPT
+	// Increment PC to point to the next instruction after BRK
+	cpu.PC++
+
+	// Push PC High Byte onto Stack
+	cpu.Memory[STACK_BOTTOM + uint16(cpu.SP)] = uint8((cpu.PC >> 8) & 0xFF)
+	cpu.SP--
+
+	// Push PC Low Byte onto Stack
+	cpu.Memory[STACK_BOTTOM + 0x0100+uint16(cpu.SP)] = uint8(cpu.PC & 0xFF)
+	cpu.SP--
+
+	// Set Break flag (B) and push status onto Stack
+	cpu.Memory[STACK_BOTTOM + 0x0100+uint16(cpu.SP)] = cpuStatusToByte(cpu) | 0x10 // Set B flag
+	cpu.SP--
+
+	// Set Interrupt Disable (I) flag
+	cpu.I = true
+
+	// Load Interrupt Vector (0xFFFE/F) into PC for Interrupt Service Routine (ISR)
+	cpu.PC = uint16(cpu.Memory[0xFFFF])<<8 | uint16(cpu.Memory[0xFFFE])
+}
+
+// php executes PHP instruction pushing status register to stack
+func (cpu *CPU6502) php() {
+	cpu.PC += 1
+	
+	cpu.Memory[]
 }
 
 // NewCPU6502 creates and initializes new 6502 CPU emulator instance
