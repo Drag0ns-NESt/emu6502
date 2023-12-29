@@ -60,10 +60,16 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.ora(cpu.indirectIndexed())
 	},
+	// 0x12 is not defined, assign NOP function
 	nop,
+	// 0x13 is not defined, assign NOP function
 	nop,
+	// 0x14 is not defined, assign NOP function
 	nop,
-	nop,
+	// 0x15 ORA, zero-page, X
+	func(cpu *CPU6502) {
+		cpu.ora(cpu.zeroPageX())
+	},
 	nop,
 	nop,
 	nop,
