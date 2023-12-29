@@ -73,9 +73,13 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	// 0x16 ASL, zero-page, X
 	func(cpu *CPU6502) {
 		cpu.executeWithZeroPageX(cpu.asl)
-	}
+	},
+	// 0x17 is not defined, assign NOP function
 	nop,
-	nop,
+	// 0x18 CLC
+	func(cpu *CPU6502) {
+		cpu.clc()
+	},
 	nop,
 	nop,
 	nop,

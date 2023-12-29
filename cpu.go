@@ -85,6 +85,12 @@ func (cpu *CPU6502) asl(value uint8) uint8 {
 	return shiftedValue
 }
 
+// clc executes CLC instruction clearing carry flag
+func (cpu *CPU6502) clc() {
+	cpu.PC += 1
+	cpu.C = false
+}
+
 // ora executes ORA instruction performing bitwise OR for A register and a
 // given argument
 func (cpu *CPU6502) ora(arg uint8) {
