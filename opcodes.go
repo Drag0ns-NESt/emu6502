@@ -100,7 +100,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x1f is not defined, assign NOP function
 	nop,
-	// 0x2-
+	// 0x20 JSR, absolute
+	func(cpu *CPU6502) {
+		cpu.jsr(cpu.absoluteAddress())
+	},
 	nop,
 	nop,
 	nop,

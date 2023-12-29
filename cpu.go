@@ -65,6 +65,15 @@ func (cpu *CPU6502) bpl(address uint16) {
 	}
 }
 
+// jsr executes JSR instruction pushing return address to stack and jumping on a
+// given address
+func (cpu *CPU6502) jsr(address uint16) {
+	cpu.PC += 1
+
+	cpu.pushToStack16(cpu.PC)
+	cpu.PC = address
+}
+
 // asl performs Arithmetic Shift Left operation on the provided value
 func (cpu *CPU6502) asl(value uint8) uint8 {
 	// coauthored with chatGPT
@@ -115,18 +124,22 @@ func (cpu *CPU6502) pushToStack(value uint8) {
 	cpu.SP--
 }
 
+// pushToStack16 pushes two bytes to stack. Higher byte will be pushed first
+func (cpu *CPU6502) pushToStack16(value uint16) {
+	// Push PC High Byte onto Stack
+	cpu.pushToStack(uint8((value >> 8) & 0xFF))
+
+	// Push PC Low Byte onto Stack
+	cpu.pushToStack(uint8(value & 0xFF))
+}
+
 // brk executes BRK instruction
 func (cpu *CPU6502) brk() {
 	// coauthored by chatGPT
 	// Increment PC to point to the next instruction after BRK
 	cpu.PC++
 
-	// Push PC High Byte onto Stack
-	cpu.pushToStack(uint8((cpu.PC >> 8) & 0xFF))
-
-	// Push PC Low Byte onto Stack
-	cpu.pushToStack(uint8(cpu.PC & 0xFF))
-
+	cpu.pushToStack16(cpu.PC)
 	// Set Break flag (B) and push status onto Stack
 	cpu.pushToStack(cpuStatusToByte(cpu) | 0x10)
 
