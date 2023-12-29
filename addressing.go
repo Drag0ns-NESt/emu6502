@@ -63,14 +63,20 @@ func (cpu *CPU6502) zeroPageX() uint8 {
 	return cpu.Memory[cpu.Memory[cpu.PC]+cpu.X]
 }
 
-// indexedIndirect is used to get argument for operation using indexedIndirect
+// indexedIndirect is used to get argument for operation using indexedIndirect ($address, X)
 // addressing. Updates PC
 func (cpu *CPU6502) indexedIndirect() uint8 {
 	// Getting initial address using zeropage, X adrressing
 	address := uint16(cpu.zeroPageX())
 
 	// Get the argument address remembering that least significant byte is first
-	return cpu.Memory[uint16(cpu.Memory[address+1]<<8)+uint16(cpu.Memory[address])]
+	return cpu.Memory[uint16(cpu.Memory[address+1])<<8+uint16(cpu.Memory[address])]
+}
+
+// indirectIndexed is used to get argument for operation using indirect indexed ($address), Y
+// addressing. Updates PC
+func (cpu *CPU6502) indirectIndexed() uint8 {
+	return cpu.Memory[cpu.zeroPage()+cpu.Y]
 }
 
 // executeWithAccumulator is used for operations for performing operations and than
