@@ -104,7 +104,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.jsr(cpu.absoluteAddress())
 	},
-	nop,
+	// 0x21 AND, (indirect, X)
+	func(cpu *CPU6502) {
+		cpu.and(cpu.indexedIndirect())
+	},
 	nop,
 	nop,
 	nop,

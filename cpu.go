@@ -100,6 +100,17 @@ func (cpu *CPU6502) clc() {
 	cpu.C = false
 }
 
+// and executes AND instruction performing bitwise AND for A register and a
+// given argument
+func (cpu *CPU6502) and(arg uint8) {
+	cpu.A &= arg
+
+	cpu.Z = cpu.A == 0
+	cpu.N = (cpu.A & 0x80) != 0
+
+	cpu.PC += 1
+}
+
 // ora executes ORA instruction performing bitwise OR for A register and a
 // given argument
 func (cpu *CPU6502) ora(arg uint8) {
