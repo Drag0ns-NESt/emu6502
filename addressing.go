@@ -26,6 +26,25 @@ func (cpu *CPU6502) absolute() uint8 {
 	return cpu.Memory[cpu.absoluteAddress()]
 }
 
+// relative returns relative to current PC address that can be used by controlling
+// instructions for jumps. Updates PC
+func (cpu *CPU6502) relative() uint16 {
+	// 0xff = -1 = 0b1111_1111
+	// 0xfe = -2 = 0b1111_1110
+	// 0xfd = -3 = 0b1111_1101
+	// 0xfc = -4 = 0b1111_1100
+
+	// +2 because we start to count after the instruction ([Instruction] [Relative argument])
+	// we assume all controling instructions will take 2 byte
+	offset := int16(int8(cpu.Memory[cpu.PC])) + 2
+
+	value := uint16(int16(cpu.PC) + offset)
+
+	cpu.PC += 1
+
+	return value
+}
+
 // zeroPage is used to get argument for operation using zero page addressing mode.
 // Updates PC
 func (cpu *CPU6502) zeroPage() uint8 {

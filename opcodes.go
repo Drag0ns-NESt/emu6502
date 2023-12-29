@@ -49,10 +49,13 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.executeWithAbsolute(cpu.asl)
 	},
+	// 0x0f is not defined, assign NOP function
 	nop,
-	nop,
-	// 0x1-
-	nop,
+
+	// 0x10 BPL, relative
+	func(cpu *CPU6502) {
+		cpu.bpl(cpu.relative())
+	},
 	nop,
 	nop,
 	nop,

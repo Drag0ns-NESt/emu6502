@@ -55,6 +55,16 @@ func nop(cpu *CPU6502) {
 	cpu.PC++
 }
 
+// bpl executes BPL instruction on a given address setting program counter to it
+// if negative flag is not set.
+func (cpu *CPU6502) bpl(address uint16) {
+	cpu.PC += 1
+
+	if !cpu.N {
+		cpu.PC = address
+	}
+}
+
 // asl performs Arithmetic Shift Left operation on the provided value
 func (cpu *CPU6502) asl(value uint8) uint8 {
 	// coauthored with chatGPT
