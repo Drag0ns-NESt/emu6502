@@ -108,7 +108,9 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.and(cpu.indexedIndirect())
 	},
+	// 0x22 is not defined, assign NOP function
 	nop,
+	// 0x23 is not defined, assign NOP function
 	nop,
 	nop,
 	nop,
