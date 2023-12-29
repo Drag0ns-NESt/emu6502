@@ -92,12 +92,21 @@ func (cpu *CPU6502) executeWithAbsolute(operation func(value uint8) uint8) {
 	cpu.Memory[address] = operation(cpu.Memory[address])
 }
 
-// executeWithZeroPage is used for operations for performing operations and than
-// storing result using zeropage address
+// executeWithZeroPage is used for performing operations and than storing result
+// using zeropage address
 func (cpu *CPU6502) executeWithZeroPage(operation func(value uint8) uint8) {
 	cpu.PC += 1
 
 	// Get the address once so that we can use it for both lookup and store
 	address := cpu.Memory[cpu.PC]
+	cpu.Memory[address] = operation(cpu.Memory[address])
+}
+
+// executeWithZeroPageX is used for performing operations and than storing result
+// using zeropage, X address
+func (cpu *CPU6502) executeWithZeroPageX(operation func(value uint8) uint8) {
+	cpu.PC += 1
+
+	address := cpu.Memory[cpu.Memory[cpu.PC]+cpu.X]
 	cpu.Memory[address] = operation(cpu.Memory[address])
 }

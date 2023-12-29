@@ -70,7 +70,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.ora(cpu.zeroPageX())
 	},
-	nop,
+	// 0x16 ASL, zero-page, X
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPageX(cpu.asl)
+	}
 	nop,
 	nop,
 	nop,
