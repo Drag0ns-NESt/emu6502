@@ -12,6 +12,12 @@ func (cpu *CPU6502) absoluteAddress() uint16 {
 	return higher<<8 | lower
 }
 
+// absoluteAddressX returns next operation argument address using absolute, X
+// addressing mode, Updates PC
+func (cpu *CPU6502) absoluteAddressX() uint16 {
+	return cpu.absoluteAddress() + uint16(cpu.X)
+}
+
 // absoluteAddressY returns next operation argument address using absolute, Y
 // addressing mode, Updates PC
 func (cpu *CPU6502) absoluteAddressY() uint16 {
@@ -32,8 +38,14 @@ func (cpu *CPU6502) absolute() uint8 {
 	return cpu.Memory[cpu.absoluteAddress()]
 }
 
+// absoluteX is used to get argument for operation using absolute addressing mode
+// getting value from 2-byte address plus X register. Updates PC
+func (cpu *CPU6502) absoluteX() uint8 {
+	return cpu.Memory[cpu.absoluteAddressX()]
+}
+
 // absoluteY is used to get argument for operation using absolute addressing mode
-// getting value from 2-byte address. Updates PC
+// getting value from 2-byte address plus value in Y register. Updates PC
 func (cpu *CPU6502) absoluteY() uint8 {
 	return cpu.Memory[cpu.absoluteAddressY()]
 }
@@ -101,6 +113,13 @@ func (cpu *CPU6502) executeWithAccumulator(operation func(value uint8) uint8) {
 // storing result using zeropage address
 func (cpu *CPU6502) executeWithAbsolute(operation func(value uint8) uint8) {
 	address := cpu.absoluteAddress()
+	cpu.Memory[address] = operation(cpu.Memory[address])
+}
+
+// executeWithAbsoluteY is used for operations for performing operations and than
+// storing result using zeropage address
+func (cpu *CPU6502) executeWithAbsoluteY(operation func(value uint8) uint8) {
+	address := cpu.absoluteAddressY()
 	cpu.Memory[address] = operation(cpu.Memory[address])
 }
 

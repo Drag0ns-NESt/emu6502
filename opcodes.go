@@ -84,11 +84,21 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.ora(cpu.absoluteY())
 	},
+	// 0x1a is not defined, assign NOP function
 	nop,
+	// 0x1b is not defined, assign NOP function
 	nop,
+	// 0x1c is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
+	// 0x1d ORA, absolute, X
+	func(cpu *CPU6502) {
+		cpu.ora(cpu.absoluteX())
+	},
+	// 0x1e ASL, absolute, X
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsoluteY(cpu.asl)
+	},
+	// 0x1f is not defined, assign NOP function
 	nop,
 	// 0x2-
 	nop,
