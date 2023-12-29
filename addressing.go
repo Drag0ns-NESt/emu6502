@@ -12,6 +12,12 @@ func (cpu *CPU6502) absoluteAddress() uint16 {
 	return higher<<8 | lower
 }
 
+// absoluteAddressY returns next operation argument address using absolute, Y
+// addressing mode, Updates PC
+func (cpu *CPU6502) absoluteAddressY() uint16 {
+	return cpu.absoluteAddress() + uint16(cpu.Y)
+}
+
 // immediate is used to get argument for operation using immediate addressing mode
 // just getting value of the byte next to the opcode. Updates PC
 func (cpu *CPU6502) immediate() uint8 {
@@ -24,6 +30,12 @@ func (cpu *CPU6502) immediate() uint8 {
 // getting value from 2-byte address. Updates PC
 func (cpu *CPU6502) absolute() uint8 {
 	return cpu.Memory[cpu.absoluteAddress()]
+}
+
+// absoluteY is used to get argument for operation using absolute addressing mode
+// getting value from 2-byte address. Updates PC
+func (cpu *CPU6502) absoluteY() uint8 {
+	return cpu.Memory[cpu.absoluteAddressY()]
 }
 
 // relative returns relative to current PC address that can be used by controlling

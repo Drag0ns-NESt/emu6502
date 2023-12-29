@@ -80,7 +80,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.clc()
 	},
-	nop,
+	// 0x19 ORA, absolute, Y
+	func(cpu *CPU6502) {
+		cpu.ora(cpu.absoluteY())
+	},
 	nop,
 	nop,
 	nop,
