@@ -130,18 +130,28 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.plp()
 	},
+	// 0x29 AND, immediate
+	func(cpu *CPU6502) {
+		cpu.and(cpu.immediate())
+	},
+	// 0x2a ROL, accumulator
+	func(cpu *CPU6502) {
+		cpu.executeWithAccumulator(cpu.rol)
+	},
+	// 0x2b is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+	// 0x2c BIT, absolute
+	func(cpu *CPU6502) {
+		cpu.bit(cpu.absolute())
+	},
+	// 0x2d AND, absolute
+	func(cpu *CPU6502) {
+		cpu.and(cpu.absolute())
+	},
+	// 0x2e ROL, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.rol)
+	},
 	// 0x3-
 	nop,
 	nop,
