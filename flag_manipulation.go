@@ -12,6 +12,12 @@ func (cpu *CPU6502) clc() {
 	cpu.C = false
 }
 
+// cli executes CLI (CLear Interrupt disable bit)
+func (cpu *CPU6502) cli() {
+	cpu.PC += 1
+	cpu.I = false
+}
+
 // bit executes BIT instruction
 func (cpu *CPU6502) bit(value uint8) {
 	cpu.PC += 1

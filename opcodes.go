@@ -278,15 +278,30 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x57 is not defined, assign NOP function
 	nop,
+	// 0x58 CLI
+	func(cpu *CPU6502) {
+		cpu.cli()
+	},
+	// 0x59 EOR, absolute, Y
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.absoluteY())
+	},
+	// 0x5a is not defined, assign NOP function
 	nop,
+	// 0x5b is not defined, assign NOP function
 	nop,
+	// 0x5c is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+	// 0x5d EOR, absolute, X
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.absoluteX())
+	},
+	// 0x5e LSR, absolute, X
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsoluteX(cpu.lsr)
+	},
+	// 0x5f is not defined, assign NOP function
+
 	// 0x6-
 	nop,
 	nop,
