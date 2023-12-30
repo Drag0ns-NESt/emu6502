@@ -19,3 +19,16 @@ func (cpu *CPU6502) asl(value uint8) uint8 {
 	cpu.PC += 1
 	return shiftedValue
 }
+
+// rol performs ROL operation rotating byte with a carry flag to left
+// (i.e. C=1 |0|1|1|0|1|0|0|0 => C=0 |1|1|0|1|0|0|0|1)
+func (cpu *CPU6502) rol(value uint8) uint8 {
+	carry := cpu.C
+	cpu.C = (value & 0x80) != 0
+	value <<= 1
+	if carry {
+		value += 1
+	}
+
+	return value
+}

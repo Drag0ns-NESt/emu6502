@@ -120,7 +120,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.and(cpu.zeroPage())
 	},
-	nop,
+	// 0x26 ROL, zero page
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPage(cpu.rol)
+	},
 	nop,
 	nop,
 	nop,
