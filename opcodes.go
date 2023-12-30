@@ -225,10 +225,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x47 is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+	// 0x48 PHA
+	func(cpu *CPU6502) {
+		cpu.pha()
+	},
 	nop,
 	nop,
 	nop,

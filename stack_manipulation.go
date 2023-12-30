@@ -31,14 +31,6 @@ func (cpu *CPU6502) pullFromStack16() uint16 {
 	return uint16(higher)<<8 + uint16(lower)
 }
 
-// rti executes RTI (ReTurn from Interrupt) instruction pulling status register
-// and pc register from stack
-func (cpu *CPU6502) rti() {
-	cpu.setCPUStatus(cpu.pullFromStack())
-
-	cpu.PC = cpu.pullFromStack16()
-}
-
 // brk executes BRK instruction
 func (cpu *CPU6502) brk() {
 	// coauthored by chatGPT
@@ -56,6 +48,12 @@ func (cpu *CPU6502) brk() {
 	cpu.PC = uint16(cpu.Memory[0xFFFF])<<8 | uint16(cpu.Memory[0xFFFE])
 }
 
+// pha executes PHA instruction pushing accumulator register to stack
+func (cpu *CPU6502) pha() {
+	cpu.PC += 1
+	cpu.pushToStack(cpu.A)
+}
+
 // php executes PHP instruction pushing status register to stack
 func (cpu *CPU6502) php() {
 	cpu.PC += 1
@@ -66,4 +64,12 @@ func (cpu *CPU6502) php() {
 func (cpu *CPU6502) plp() {
 	cpu.PC += 1
 	cpu.setCPUStatus(cpu.pullFromStack())
+}
+
+// rti executes RTI (ReTurn from Interrupt) instruction pulling status register
+// and pc register from stack
+func (cpu *CPU6502) rti() {
+	cpu.setCPUStatus(cpu.pullFromStack())
+
+	cpu.PC = cpu.pullFromStack16()
 }
