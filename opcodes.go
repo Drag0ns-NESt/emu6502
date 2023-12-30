@@ -156,11 +156,25 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.bmi(cpu.relative())
 	},
+	// 0x31 AND, indirect indexed, (address), Y
+	func(cpu *CPU6502) {
+		cpu.and(cpu.indirectIndexed())
+	},
+	// 0x32 is not defined, assign NOP function
 	nop,
+	// 0x33 is not defined, assign NOP function
 	nop,
+	// 0x34 is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
+	// 0x35 AND, zero page, X
+	func(cpu *CPU6502) {
+		cpu.and(cpu.zeroPageX())
+	},
+	// 0x36 ROL, zero page, X
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPageX(cpu.rol)
+	},
+	// 0x37 is not defined, assign NOP function
 	nop,
 	nop,
 	nop,
