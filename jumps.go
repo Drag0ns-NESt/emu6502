@@ -45,3 +45,9 @@ func (cpu *CPU6502) jsr(address uint16) {
 	cpu.pushToStack16(cpu.PC)
 	cpu.PC = address
 }
+
+// rts executes RTS (ReTurn from Subroutine) instruction pulling address from
+// a stack and setting it to program counter
+func (cpu *CPU6502) rts() {
+	cpu.PC = cpu.pullFromStack16()
+}

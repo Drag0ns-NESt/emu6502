@@ -302,7 +302,14 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x5f is not defined, assign NOP function
 
-	// 0x6-
+	// 0x60 RTS
+	func(cpu *CPU6502) {
+		cpu.rts()
+	},
+	// 0x61 ADC, indexed indirect, (address, X)
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.indexedIndirect())
+	},
 	nop,
 	nop,
 	nop,
