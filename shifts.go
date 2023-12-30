@@ -46,5 +46,24 @@ func (cpu *CPU6502) rol(value uint8) uint8 {
 		value += 1
 	}
 
+	cpu.N = (value & 0x80) != 0
+	cpu.Z = value == 0
+
+	return value
+}
+
+// ror performs ROR (Rotate One bit Right) opetation rotating byte with a carry
+// flag to right (i.e. C=1 |0|1|1|0|1|0|0|0 => C=0 |1|0|1|1|0|1|0|0)
+func (cpu *CPU6502) ror(value uint8) uint8 {
+	carry := cpu.C
+	cpu.C = (value & 0x01) != 0
+	value >>= 1
+	if carry {
+		value += 0x80
+	}
+
+	cpu.N = (value & 0x80) != 0
+	cpu.Z = value == 0
+
 	return value
 }
