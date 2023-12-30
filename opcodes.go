@@ -152,8 +152,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.executeWithAbsolute(cpu.rol)
 	},
-	// 0x3-
-	nop,
+	// 0x30 BMI, relative
+	func(cpu *CPU6502) {
+		cpu.bmi(cpu.relative())
+	},
 	nop,
 	nop,
 	nop,

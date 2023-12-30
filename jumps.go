@@ -10,6 +10,16 @@ func (cpu *CPU6502) bpl(address uint16) {
 	}
 }
 
+// bmi executes BMI (Branch on Minus) instructions on a given address setting
+// program counter if negative flag is set
+func (cpu *CPU6502) bmi(address uint16) {
+	cpu.PC += 1
+
+	if cpu.N {
+		cpu.PC = address
+	}
+}
+
 // jsr executes JSR instruction pushing return address to stack and jumping on a
 // given address
 func (cpu *CPU6502) jsr(address uint16) {
