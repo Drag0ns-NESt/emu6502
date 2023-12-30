@@ -23,6 +23,22 @@ func (cpu *CPU6502) pushToStack16(value uint16) {
 	cpu.pushToStack(uint8(value & 0xFF))
 }
 
+// pullFromStack16 pull two bytes from stack. Lower byte then higher byte
+func (cpu *CPU6502) pullFromStack16() uint16 {
+	lower := cpu.pullFromStack()
+	higher := cpu.pullFromStack()
+
+	return uint16(higher)<<8 + uint16(lower)
+}
+
+// rti executes RTI (ReTurn from Interrupt) instruction pulling status register
+// and pc register from stack
+func (cpu *CPU6502) rti() {
+	cpu.setCPUStatus(cpu.pullFromStack())
+
+	cpu.PC = cpu.pullFromStack16()
+}
+
 // brk executes BRK instruction
 func (cpu *CPU6502) brk() {
 	// coauthored by chatGPT

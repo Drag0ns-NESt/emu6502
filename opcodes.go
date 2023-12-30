@@ -200,7 +200,14 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x3f is not defined, assign NOP function
 	nop,
-	// 0x4-
+	// 0x40 RTI
+	func(cpu *CPU6502) {
+		cpu.rti()
+	},
+	// 0x41 EOR indexed indirect, (address, X)
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.indexedIndirect())
+	},
 	nop,
 	nop,
 	nop,

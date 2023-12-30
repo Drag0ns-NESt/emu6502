@@ -26,3 +26,16 @@ func (cpu *CPU6502) ora(arg uint8) {
 
 	cpu.PC += 1
 }
+
+// eor executes EOR instruction performing bitwise exclusive OR for A register
+// and a given argument
+func (cpu *CPU6502) eor(arg uint8) {
+	// authored by chatGPT
+	cpu.A ^= arg
+
+	// Update zero and negative flags as required
+	cpu.Z = cpu.A == 0
+	cpu.N = (cpu.A & 0x80) != 0
+
+	cpu.PC += 1
+}
