@@ -20,6 +20,13 @@ func (cpu *CPU6502) bmi(address uint16) {
 	}
 }
 
+// jmp executes JMP instruction jumping on a given address
+func (cpu *CPU6502) jmp(address uint16) {
+	cpu.PC += 1
+
+	cpu.PC = address
+}
+
 // jsr executes JSR instruction pushing return address to stack and jumping on a
 // given address
 func (cpu *CPU6502) jsr(address uint16) {

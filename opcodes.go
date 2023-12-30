@@ -229,14 +229,31 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.pha()
 	},
+	// 0x49 EOR, immediate
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.immediate())
+	},
+	// 0x4a LSR, accumulator
+	func(cpu *CPU6502) {
+		cpu.executeWithAccumulator(cpu.lsr)
+	},
+	// 0x4b is not defined, assign NOP function
 	nop,
+	// 0x4c JMP, absolute
+	func(cpu *CPU6502) {
+		cpu.jmp(cpu.absoluteAddress())
+	},
+	// 0x4d EOR, absolute
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.absolute())
+	},
+	// 0x4e LSR, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.lsr)
+	},
+	// 0x4f is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0x5-
 	nop,
 	nop,
