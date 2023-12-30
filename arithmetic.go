@@ -3,6 +3,7 @@ package emu6502
 // adc performs ADC (ADd with Carry) operation for value in accumulator with a
 // given argument
 func (cpu *CPU6502) adc(arg uint8) {
+	cpu.PC += 1
 	result := uint16(cpu.A) + uint16(arg)
 	if cpu.C {
 		result += 1

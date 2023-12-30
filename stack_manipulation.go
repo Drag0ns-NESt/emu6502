@@ -60,6 +60,12 @@ func (cpu *CPU6502) php() {
 	cpu.pushToStack(cpu.cpuStatusToByte())
 }
 
+// pla executes PLA instruction pulling value from stack to accumulator
+func (cpu *CPU6502) pla() {
+	cpu.PC += 1
+	cpu.A = cpu.pullFromStack()
+}
+
 // plp executes PLP instruction pulling new status register value from a stack
 func (cpu *CPU6502) plp() {
 	cpu.PC += 1
