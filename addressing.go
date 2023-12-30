@@ -109,15 +109,22 @@ func (cpu *CPU6502) executeWithAccumulator(operation func(value uint8) uint8) {
 	cpu.A = operation(cpu.A)
 }
 
-// executeWithAbsolute is used for operations for performing operations and than
-// storing result using zeropage address
+// executeWithAbsolute is used for performing operations and then storing result
+// using zeropage address
 func (cpu *CPU6502) executeWithAbsolute(operation func(value uint8) uint8) {
 	address := cpu.absoluteAddress()
 	cpu.Memory[address] = operation(cpu.Memory[address])
 }
 
-// executeWithAbsoluteY is used for operations for performing operations and than
-// storing result using zeropage address
+// executeWithAbsoluteX is used for performing operations and then storing result
+// using zeropage address plus X register
+func (cpu *CPU6502) executeWithAbsoluteX(operation func(value uint8) uint8) {
+	address := cpu.absoluteAddressX()
+	cpu.Memory[address] = operation(cpu.Memory[address])
+}
+
+// executeWithAbsoluteY is used for performing operations and then storing result
+// using zeropage address plus Y register
 func (cpu *CPU6502) executeWithAbsoluteY(operation func(value uint8) uint8) {
 	address := cpu.absoluteAddressY()
 	cpu.Memory[address] = operation(cpu.Memory[address])

@@ -180,13 +180,25 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.sec()
 	},
+	// 0x39 AND, absolute, Y
+	func(cpu *CPU6502) {
+		cpu.and(cpu.absoluteY())
+	},
+	// 0x3a is not defined, assign NOP function
 	nop,
+	// 0x3b is not defined, assign NOP function
 	nop,
+	// 0x3c is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+	// 0x3d AND, absolute, X
+	func(cpu *CPU6502) {
+		cpu.and(cpu.absoluteX())
+	},
+	// 0x3e ROL, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsoluteX(cpu.rol)
+	},
+	// 0x3f is not defined, assign NOP function
 	nop,
 	// 0x4-
 	nop,
