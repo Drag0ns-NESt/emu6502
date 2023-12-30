@@ -8,6 +8,12 @@ func (cpu *CPU6502) pushToStack(value uint8) {
 	cpu.SP--
 }
 
+// pullFromStack pulls a top value from stack
+func (cpu *CPU6502) pullFromStack() uint8 {
+	cpu.SP++
+	return cpu.Memory[STACK_BOTTOM+uint16(cpu.SP)]
+}
+
 // pushToStack16 pushes two bytes to stack. Higher byte will be pushed first
 func (cpu *CPU6502) pushToStack16(value uint16) {
 	// Push PC High Byte onto Stack
@@ -25,7 +31,7 @@ func (cpu *CPU6502) brk() {
 
 	cpu.pushToStack16(cpu.PC)
 	// Set Break flag (B) and push status onto Stack
-	cpu.pushToStack(cpuStatusToByte(cpu) | 0x10)
+	cpu.pushToStack(cpu.cpuStatusToByte() | 0x10)
 
 	// Set Interrupt Disable (I) flag
 	cpu.I = true
@@ -37,5 +43,11 @@ func (cpu *CPU6502) brk() {
 // php executes PHP instruction pushing status register to stack
 func (cpu *CPU6502) php() {
 	cpu.PC += 1
-	cpu.pushToStack(cpuStatusToByte(cpu))
+	cpu.pushToStack(cpu.cpuStatusToByte())
+}
+
+// plp executes PLP instruction pulling new status register value from a stack
+func (cpu *CPU6502) plp() {
+	cpu.PC += 1
+	cpu.setCPUStatus(cpu.pullFromStack())
 }
