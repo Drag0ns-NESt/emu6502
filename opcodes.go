@@ -310,9 +310,16 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.adc(cpu.indexedIndirect())
 	},
+	// 0x62 is not defined, assign NOP function
 	nop,
+	// 0x63 is not defined, assign NOP function
 	nop,
+	// 0x64 is not defined, assign NOP function
 	nop,
+	// 0x65 ADC, zero page
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.zeroPage())
+	},
 	nop,
 	nop,
 	nop,
