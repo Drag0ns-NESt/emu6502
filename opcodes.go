@@ -258,12 +258,25 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.bvc(cpu.relative())
 	},
+	// 0x51 EOR, indirect indexed, (address), Y
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.indirectIndexed())
+	},
+	// 0x52 is not defined, assign NOP function
 	nop,
+	// 0x53 is not defined, assign NOP function
 	nop,
+	// 0x54 is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
+	// 0x55 EOR, zero page, X
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.zeroPageX())
+	},
+	// 0x56 LSR, zero page, X
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPageX(cpu.lsr)
+	},
+	// 0x57 is not defined, assign NOP function
 	nop,
 	nop,
 	nop,
