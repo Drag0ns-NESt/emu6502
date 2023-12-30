@@ -6,6 +6,15 @@ func (cpu *CPU6502) clc() {
 	cpu.C = false
 }
 
+// bit executes BIT instruction
+func (cpu *CPU6502) bit(value uint8) {
+	cpu.PC += 1
+	cpu.N = value&(0x01<<7) == 1
+	cpu.V = value&(0x01<<6) == 1
+
+	cpu.Z = (value & cpu.A) == 0
+}
+
 // cpuStatusToByte converts CPU status to byte format
 func cpuStatusToByte(cpu *CPU6502) uint8 {
 	status := uint8(0x20) // Bit 5 is always set for the 6502

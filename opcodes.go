@@ -112,6 +112,11 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	nop,
 	// 0x23 is not defined, assign NOP function
 	nop,
+	// 0x24 BIT, zero page
+	func(cpu *CPU6502) {
+		cpu.bit(cpu.zeroPage())
+	},
+	nop,
 	nop,
 	nop,
 	nop,
