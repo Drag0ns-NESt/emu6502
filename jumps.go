@@ -20,6 +20,16 @@ func (cpu *CPU6502) bmi(address uint16) {
 	}
 }
 
+// bvc executes BVC (Branch on overflow(V) Clear) instructions on a given address
+// setting program counter if overflow flag is clear
+func (cpu *CPU6502) bvc(address uint16) {
+	cpu.PC += 1
+
+	if !cpu.V {
+		cpu.PC = address
+	}
+}
+
 // jmp executes JMP instruction jumping on a given address
 func (cpu *CPU6502) jmp(address uint16) {
 	cpu.PC += 1
