@@ -1,5 +1,11 @@
 package emu6502
 
+// sec executes SEC instruction setting carry flag
+func (cpu *CPU6502) sec() {
+	cpu.PC += 1
+	cpu.C = true
+}
+
 // clc executes CLC instruction clearing carry flag
 func (cpu *CPU6502) clc() {
 	cpu.PC += 1

@@ -176,7 +176,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x37 is not defined, assign NOP function
 	nop,
-	nop,
+	// 0x38 SEC
+	func(cpu *CPU6502) {
+		cpu.sec()
+	},
 	nop,
 	nop,
 	nop,
