@@ -20,6 +20,22 @@ func (cpu *CPU6502) asl(value uint8) uint8 {
 	return shiftedValue
 }
 
+// lsr performs LSR (Logical Shift Right) operation on the provided value
+func (cpu *CPU6502) lsr(value uint8) uint8 {
+	cpu.C = (value & 0x01) != 0
+
+	value >>= 1
+
+	cpu.Z = value == 0
+
+	// there is no way it can be 1, because higher value bit will always be
+	// 0
+	cpu.N = false
+
+	cpu.PC += 1
+	return value
+}
+
 // rol performs ROL operation rotating byte with a carry flag to left
 // (i.e. C=1 |0|1|1|0|1|0|0|0 => C=0 |1|1|0|1|0|0|0|1)
 func (cpu *CPU6502) rol(value uint8) uint8 {

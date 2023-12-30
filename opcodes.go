@@ -200,6 +200,7 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0x3f is not defined, assign NOP function
 	nop,
+
 	// 0x40 RTI
 	func(cpu *CPU6502) {
 		cpu.rti()
@@ -208,9 +209,21 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.eor(cpu.indexedIndirect())
 	},
+	// 0x42 is not defined, assign NOP function
 	nop,
+	// 0x43 is not defined, assign NOP function
 	nop,
+	// 0x44 is not defined, assign NOP function
 	nop,
+	// 0x45 EOR, zero page
+	func(cpu *CPU6502) {
+		cpu.eor(cpu.zeroPage())
+	},
+	// 0x46 LSR, zero page
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPage(cpu.lsr)
+	},
+	// 0x47 is not defined, assign NOP function
 	nop,
 	nop,
 	nop,
