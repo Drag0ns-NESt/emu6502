@@ -330,18 +330,31 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.pla()
 	},
+	// 0x69 ADC, immediate
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.immediate())
+	},
+	// 0x6a ROR, accumulator
+	func(cpu *CPU6502) {
+		cpu.executeWithAccumulator(cpu.ror)
+	},
+	// 0x6b is not defined, assign NOP function
 	nop,
+	// 0x6c JMP, indirect
+	func(cpu *CPU6502) {
+		cpu.jmp(cpu.indirectAddress())
+	},
+	// 0x6d ADC, absolute
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.absolute())
+	},
+	// 0x6e ROR, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.ror)
+	},
+	// 0x6f is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0x7-
 	nop,
 	nop,
