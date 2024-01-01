@@ -355,23 +355,55 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	// 0x6f is not defined, assign NOP function
 	nop,
 
-	// 0x7-
+	// 0x70, BVS, relative
+	func(cpu *CPU6502) {
+		cpu.bvs(cpu.relative())
+	},
+	// 0x71, ADC, indirect indexed, (address), Y
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.indirectIndexed())
+	},
+	// 0x72 is not defined, assign NOP function
 	nop,
+	// 0x73 is not defined, assign NOP function
 	nop,
+	// 0x74 is not defined, assign NOP function
 	nop,
+	// 0x75 ADC, zero page, X
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.zeroPageX())
+	},
+	// 0x76 ROR, zero page, X
+	func(cpu *CPU6502) {
+		cpu.ror(cpu.zeroPageX())
+	},
+	// 0x77 is not defined, assign NOP function
 	nop,
+	// 0x78 SEI
+	func(cpu *CPU6502) {
+		cpu.sei()
+	},
+	// 0x79 ADC, absolute, Y
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.absoluteY())
+	},
+	// 0x7a is not defined, assign NOP function
 	nop,
+	// 0x7b is not defined, assign NOP function
 	nop,
+	// 0x7c is not defined, assign NOP function
 	nop,
+	// 0x7d ADC, absolute, X
+	func(cpu *CPU6502) {
+		cpu.adc(cpu.absoluteX())
+	},
+	// 0x7e ROR, absolute, X
+	func(cpu *CPU6502) {
+		cpu.ror(cpu.absoluteX())
+	},
+	// 0x7f is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0x8-
 	nop,
 	nop,

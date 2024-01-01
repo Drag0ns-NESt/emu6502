@@ -1,9 +1,12 @@
 package emu6502
 
-// sec executes SEC instruction setting carry flag
-func (cpu *CPU6502) sec() {
+// bit executes BIT instruction
+func (cpu *CPU6502) bit(value uint8) {
 	cpu.PC += 1
-	cpu.C = true
+	cpu.N = value&(0x01<<7) == 1
+	cpu.V = value&(0x01<<6) == 1
+
+	cpu.Z = (value & cpu.A) == 0
 }
 
 // clc executes CLC instruction clearing carry flag
@@ -18,13 +21,16 @@ func (cpu *CPU6502) cli() {
 	cpu.I = false
 }
 
-// bit executes BIT instruction
-func (cpu *CPU6502) bit(value uint8) {
+// sec executes SEC instruction setting carry flag
+func (cpu *CPU6502) sec() {
 	cpu.PC += 1
-	cpu.N = value&(0x01<<7) == 1
-	cpu.V = value&(0x01<<6) == 1
+	cpu.C = true
+}
 
-	cpu.Z = (value & cpu.A) == 0
+// sei executes SEI (SEt Interrupt disable) instruction
+func (cpu *CPU6502) sei() {
+	cpu.PC += 1
+	cpu.I = true
 }
 
 // cpuStatusToByte converts CPU status to byte format
