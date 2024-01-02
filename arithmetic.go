@@ -25,3 +25,12 @@ func (cpu *CPU6502) adc(arg uint8) {
 
 	// TODO: decimal mode. mb someday...
 }
+
+// dey performs DEY (DEcrement Y) operation
+func (cpu *CPU6502) dey() {
+	cpu.PC += 1
+	cpu.Y -= 1
+
+	cpu.Z = cpu.Y == 0
+	cpu.N = (cpu.Y & 0x80) != 0
+}
