@@ -22,6 +22,16 @@ func (cpu *CPU6502) indirectAddress() uint16 {
 	return higher<<8 | lower
 }
 
+// indexedIndirectAddress returns address for next operation using indexed
+// indirect addressing mode (address, X). Updates PC
+func (cpu *CPU6502) indexedIndirectAddress() uint16 {
+	// Getting initial address using zeropage, X adrressing
+	address := uint16(cpu.zeroPageX())
+
+	// Return indirect address
+	return uint16(cpu.Memory[address+1])<<8 + uint16(cpu.Memory[address])
+}
+
 // absoluteAddressX returns next operation argument address using absolute, X
 // addressing mode, Updates PC
 func (cpu *CPU6502) absoluteAddressX() uint16 {
@@ -63,11 +73,7 @@ func (cpu *CPU6502) absoluteY() uint8 {
 // indexedIndirect is used to get argument for operation using indexedIndirect ($address, X)
 // addressing. Updates PC
 func (cpu *CPU6502) indexedIndirect() uint8 {
-	// Getting initial address using zeropage, X adrressing
-	address := uint16(cpu.zeroPageX())
-
-	// Get the argument address remembering that least significant byte is first
-	return cpu.Memory[uint16(cpu.Memory[address+1])<<8+uint16(cpu.Memory[address])]
+	return cpu.Memory[cpu.indexedIndirectAddress()]
 }
 
 // indirectIndexed is used to get argument for operation using indirect indexed ($address), Y
@@ -137,6 +143,13 @@ func (cpu *CPU6502) executeWithAbsoluteX(operation func(value uint8) uint8) {
 // using zeropage address plus Y register. Updates PC
 func (cpu *CPU6502) executeWithAbsoluteY(operation func(value uint8) uint8) {
 	address := cpu.absoluteAddressY()
+	cpu.Memory[address] = operation(cpu.Memory[address])
+}
+
+// executeWithIndexedIndirect is used for performing operations and the stroing result
+// using indexed indirect addressing mode (address, X). Update PC
+func (cpu *CPU6502) executeWithIndexedIndirect(operation func(uint8) uint8) {
+	address := cpu.indexedIndirectAddress()
 	cpu.Memory[address] = operation(cpu.Memory[address])
 }
 

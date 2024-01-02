@@ -404,8 +404,12 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	// 0x7f is not defined, assign NOP function
 	nop,
 
-	// 0x8-
+	// 0x80 is not defined, assign NOP function
 	nop,
+	// 0x81 STA, indexed indirect, (address, X)
+	func(cpu *CPU6502) {
+		cpu.executeWithIndexedIndirect(cpu.sta)
+	},
 	nop,
 	nop,
 	nop,
