@@ -432,7 +432,12 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.dey()
 	},
+	// 0x89 is not defined, assign NOP function
 	nop,
+	// 0x8a TXA
+	func(cpu *CPU6502) {
+		cpu.txa()
+	},
 	nop,
 	nop,
 	nop,

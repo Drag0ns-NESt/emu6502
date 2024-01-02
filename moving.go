@@ -20,3 +20,9 @@ func (cpu *CPU6502) sty(_ uint8) uint8 {
 	cpu.PC += 1
 	return cpu.Y
 }
+
+// txa executes TXA (Transfer X to Accumulator) operation
+func (cpu *CPU6502) txa() {
+	cpu.PC += 1
+	cpu.A = cpu.X
+}
