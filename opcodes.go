@@ -438,15 +438,23 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.txa()
 	},
+	// 0x8b is not defined, assign NOP function
 	nop,
+	// 0x8c STY, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.sty)
+	},
+	// 0x8d STA, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.sta)
+	},
+	// 0x8e STX, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.stx)
+	},
+	// 0x8f is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0x9-
 	nop,
 	nop,
