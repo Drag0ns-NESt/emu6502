@@ -459,7 +459,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.bcc(cpu.relative())
 	},
-	nop,
+	// 0x91 STA, indirect indexed (address, Y)
+	func(cpu *CPU6502) {
+		cpu.executeWithIndirectIndexed(cpu.sta)
+	},
 	nop,
 	nop,
 	nop,
