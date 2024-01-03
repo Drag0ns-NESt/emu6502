@@ -463,21 +463,49 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.executeWithIndirectIndexed(cpu.sta)
 	},
+	// 0x92 is not defined, assign NOP function
 	nop,
+	// 0x93 is not defined, assign NOP function
 	nop,
+	// 0x94 STY, zero page, X
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPageX(cpu.sty)
+	},
+	// 0x95 STA, zero page, X
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPageX(cpu.sta)
+	},
+	// 0x96 STX, zero page, X
+	func(cpu *CPU6502) {
+		cpu.executeWithZeroPageX(cpu.stx)
+	},
+	// 0x97 is not defined, assign NOP function
 	nop,
+	// 0x98 TYA
+	func(cpu *CPU6502) {
+		cpu.tya()
+	},
+	// 0x99 STA, absolute, Y
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsoluteY(cpu.sta)
+	},
+	// 0x9a TXS
+	func(cpu *CPU6502) {
+		cpu.txs()
+	},
+	// 0x9b is not defined, assign NOP function
 	nop,
+	// 0x9c is not defined, assign NOP function
 	nop,
+	// 0x9d STA, absolute, X
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsoluteX(cpu.sta)
+	},
+	// 0x9e is not defined, assign NOP function
 	nop,
+	// 0x9f is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0xa-
 	nop,
 	nop,

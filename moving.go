@@ -26,3 +26,9 @@ func (cpu *CPU6502) txa() {
 	cpu.PC += 1
 	cpu.A = cpu.X
 }
+
+// tya executes TYA (Transfer Y to Accumulator) operation
+func (cpu *CPU6502) tya() {
+	cpu.PC += 1
+	cpu.A = cpu.Y
+}
