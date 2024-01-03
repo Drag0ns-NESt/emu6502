@@ -506,23 +506,63 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	// 0x9f is not defined, assign NOP function
 	nop,
 
-	// 0xa-
+	// 0xa0 LDY, immediate
+	func(cpu *CPU6502) {
+		cpu.ldy(cpu.immediate())
+	},
+	// 0xa1 LDA, indexed indirect (address, X)
+	func(cpu *CPU6502) {
+		cpu.lda(cpu.indexedIndirect())
+	},
+	// 0xa2 LDX, immediate
+	func(cpu *CPU6502) {
+		cpu.ldx(cpu.immediate())
+	},
+	// 0xa3 is not defined, assign NOP function
 	nop,
+	// 0xa4 LDY, zero page
+	func(cpu *CPU6502) {
+		cpu.ldy(cpu.zeroPage())
+	},
+	// 0xa5 LDA, zero page
+	func(cpu *CPU6502) {
+		cpu.lda(cpu.zeroPage())
+	},
+	// 0xa6 LDX, zero page
+	func(cpu *CPU6502) {
+		cpu.ldx(cpu.zeroPage())
+	},
+	// 0xa7 is not defined, assign NOP function
 	nop,
+	// 0xa8 TAY
+	func(cpu *CPU6502) {
+		cpu.tay()
+	},
+	// 0xa9 LDA, immediate
+	func(cpu *CPU6502) {
+		cpu.lda(cpu.immediate())
+	},
+	// 0xaa TAX
+	func(cpu *CPU6502) {
+		cpu.tax()
+	},
+	// 0xab is not defined, assign NOP function
 	nop,
+	// 0xac LDY, absolute
+	func(cpu *CPU6502) {
+		cpu.ldy(cpu.absolute())
+	},
+	// 0xad LDA, absolute
+	func(cpu *CPU6502) {
+		cpu.lda(cpu.absolute())
+	},
+	// 0xae LDX, absolute
+	func(cpu *CPU6502) {
+		cpu.ldx(cpu.absolute())
+	},
+	// 0xaf is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0xb-
 	nop,
 	nop,
