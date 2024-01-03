@@ -1,5 +1,14 @@
 package emu6502
 
+// bcc executes BCC (Branch on Carry Clear) instruction to a given address
+func (cpu *CPU6502) bcc(address uint16) {
+	cpu.PC += 1
+
+	if !cpu.C {
+		cpu.PC = address
+	}
+}
+
 // bpl executes BPL instruction on a given address setting program counter to it
 // if negative flag is not set.
 func (cpu *CPU6502) bpl(address uint16) {

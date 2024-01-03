@@ -455,7 +455,10 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	// 0x8f is not defined, assign NOP function
 	nop,
 
-	// 0x9-
+	// 0x90 BCC, relative
+	func(cpu *CPU6502) {
+		cpu.bcc(cpu.relative())
+	},
 	nop,
 	nop,
 	nop,
