@@ -21,6 +21,12 @@ func (cpu *CPU6502) cli() {
 	cpu.I = false
 }
 
+// cli executes CLV (CLear oVerflow flag)
+func (cpu *CPU6502) clv() {
+	cpu.PC += 1
+	cpu.V = false
+}
+
 // sec executes SEC instruction setting carry flag
 func (cpu *CPU6502) sec() {
 	cpu.PC += 1

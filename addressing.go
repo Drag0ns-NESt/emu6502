@@ -125,6 +125,15 @@ func (cpu *CPU6502) zeroPageX() uint8 {
 	return cpu.Memory[cpu.Memory[cpu.PC]+cpu.X]
 }
 
+// zeroPageY is used to get argument for operation using (zero page + Y) addressing mode.
+// Updates PC
+func (cpu *CPU6502) zeroPageY() uint8 {
+	cpu.PC += 1
+
+	// Getting  zero-page address from argument
+	return cpu.Memory[cpu.Memory[cpu.PC]+cpu.Y]
+}
+
 // executeWithAccumulator is used for operations for performing operations and than
 // storing result using accumulator register
 func (cpu *CPU6502) executeWithAccumulator(operation func(value uint8) uint8) {

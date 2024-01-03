@@ -80,6 +80,12 @@ func (cpu *CPU6502) rti() {
 	cpu.PC = cpu.pullFromStack16()
 }
 
+// tsx executes TSX (Transfer Stack pointer to X) instruction
+func (cpu *CPU6502) tsx() {
+	cpu.PC += 1
+	cpu.X = cpu.SP
+}
+
 // txs executes TXS (Transfer X to Stack pointer) instruction
 func (cpu *CPU6502) txs() {
 	cpu.PC += 1
