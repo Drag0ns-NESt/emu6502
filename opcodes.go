@@ -640,7 +640,7 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0xc6 DEC, zero page
 	func(cpu *CPU6502) {
-		cpu.dec(cpu.zeroPageAddress())
+		cpu.executeWithZeroPage(cpu.dec)
 	},
 	// 0xc7 is not defined, assign NOP function
 	nop,
@@ -668,7 +668,7 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0xce DEC, absolute
 	func(cpu *CPU6502) {
-		cpu.dec(cpu.absoluteAddress())
+		cpu.executeWithAbsolute(cpu.dec)
 	},
 	// 0xcf is not defined, assign NOP function
 	nop,
@@ -693,7 +693,7 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0xd6 DEC, zero page, X
 	func(cpu *CPU6502) {
-		cpu.dec(cpu.zeroPageXAddress())
+		cpu.executeWithZeroPageX(cpu.dec)
 	},
 	// 0xd7 is not defined, assign NOP function
 	nop,
@@ -717,28 +717,64 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	},
 	// 0xde DEC, absolute, X
 	func(cpu *CPU6502) {
-		cpu.dec(cpu.absoluteAddressX())
+		cpu.executeWithAbsoluteX(cpu.dec)
 	},
 	// 0xdf is not defined, assign NOP function
 	nop,
 
-	// 0xe-
+	// 0xe0 CPX, immediate
+	func(cpu *CPU6502) {
+		cpu.cpx(cpu.immediate())
+	},
+	// 0xe1 SBC, indexed indirect, (address, X)
+	func(cpu *CPU6502) {
+		cpu.sbc(cpu.indexedIndirect())
+	},
+	// 0xe2 is not defined, assign NOP function
 	nop,
+	// 0xe3 is not defined, assign NOP function
 	nop,
+	// 0xe4 CPX, zero page
+	func(cpu *CPU6502) {
+		cpu.cpx(cpu.zeroPage())
+	},
+	// 0xe5 SBC, zero page
+	func(cpu *CPU6502) {
+		cpu.sbc(cpu.zeroPage())
+	},
+	// 0xe6 INC, zero page
+	func(cpu *CPU6502) {
+		cpu.inc(cpu.zeroPage())
+	},
+	// 0xe7 is not defined, assign NOP function
 	nop,
+	// 0xe8 INX
+	func(cpu *CPU6502) {
+		cpu.inx()
+	},
+	// 0xe9 SBC, immediate
+	func(cpu *CPU6502) {
+		cpu.sbc(cpu.immediate())
+	},
+	// 0xea NOP, this time it is real NOP function
 	nop,
+	// 0xeb is not defined, assign NOP function
 	nop,
+	// 0xec CPX, absolute
+	func(cpu *CPU6502) {
+		cpu.cpx(cpu.absolute())
+	},
+	// 0xed SBC, absolute
+	func(cpu *CPU6502) {
+		cpu.sbc(cpu.absolute())
+	},
+	// 0xee INC, absolute
+	func(cpu *CPU6502) {
+		cpu.executeWithAbsolute(cpu.inc)
+	},
+	// 0xef is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0xf-
 	nop,
 	nop,

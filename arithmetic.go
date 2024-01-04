@@ -26,13 +26,42 @@ func (cpu *CPU6502) adc(arg uint8) {
 	// TODO: decimal mode. mb someday...
 }
 
-// dec performs DEC (DECrement memory by one) operation
-func (cpu *CPU6502) dec(address uint16) {
+// sbc performs SBC (SuBtract with Carry) operation for value in accumulator with a
+// given argument
+func (cpu *CPU6502) sbc(arg uint8) {
 	cpu.PC += 1
-	cpu.Memory[address] -= 1
+	result := int16(cpu.A) - int16(arg)
+	if cpu.C {
+		result -= 1
+	}
 
-	cpu.Z = cpu.Memory[address] == 0
-	cpu.N = (cpu.Memory[address] & 0x80) != 0
+	if result < 0 {
+		result += 256
+		cpu.C = false
+	} else {
+		cpu.C = true
+	}
+
+	// set overflow if result has bit 7 set and accumulator is not
+	cpu.V = ((uint8(result) & 0x80) & (^cpu.A & 0x80)) != 0
+
+	cpu.Z = result == 0
+	cpu.N = (cpu.A & 0x80) != 0
+
+	cpu.A = uint8(result)
+
+	// TODO: again, decimal mode is not implemented. Maybe, it will be in the future
+	//       But possibly it won't.
+}
+
+// dec performs DEC (DECrement memory by one) operation
+func (cpu *CPU6502) dec(value uint8) uint8 {
+	cpu.PC += 1
+	value -= 1
+
+	cpu.Z = value == 0
+	cpu.N = (value & 0x80) != 0
+	return value
 }
 
 // dex performs DEX (DEcrement X) operation
@@ -51,6 +80,26 @@ func (cpu *CPU6502) dey() {
 
 	cpu.Z = cpu.Y == 0
 	cpu.N = (cpu.Y & 0x80) != 0
+}
+
+// inc performs INC (INcrement memory by one) operation
+func (cpu *CPU6502) inc(value uint8) uint8 {
+	cpu.PC += 1
+
+	value += 1
+
+	cpu.Z = value == 0
+	cpu.N = (value & 0x80) != 0
+	return value
+}
+
+// inx performs INX (INcrement X) operation
+func (cpu *CPU6502) inx() {
+	cpu.PC += 1
+	cpu.X += 1
+
+	cpu.Z = cpu.X == 0
+	cpu.N = (cpu.X & 0x80) != 0
 }
 
 // iny performs INY (INcrement Y) operation
