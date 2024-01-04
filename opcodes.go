@@ -618,23 +618,61 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	// 0xbf is not defined, assign NOP function
 	nop,
 
-	// 0xc-
+	// 0xc0 CPY, immediate
+	func(cpu *CPU6502) {
+		cpu.cpy(cpu.immediate())
+	},
+	// 0xc1 CMP, indexed indirect, (X, address)
+	func(cpu *CPU6502) {
+		cpu.cmp(cpu.indexedIndirect())
+	},
+	// 0xc2 is not defined, assign NOP function
 	nop,
+	// 0xc3 is not defined, assign NOP function
 	nop,
+	// 0xc4 CPY, zero page
+	func(cpu *CPU6502) {
+		cpu.cpy(cpu.zeroPage())
+	},
+	// 0xc5 CMP, zero page
+	func(cpu *CPU6502) {
+		cpu.cmp(cpu.zeroPage())
+	},
+	// 0xc6 DEC, zero page
+	func(cpu *CPU6502) {
+		cpu.dec(cpu.zeroPageAddress())
+	},
+	// 0xc7 is not defined, assign NOP function
 	nop,
+	// 0xc8 INY
+	func(cpu *CPU6502) {
+		cpu.iny()
+	},
+	// 0xc9 CMP, immediate
+	func(cpu *CPU6502) {
+		cpu.cmp(cpu.immediate())
+	},
+	// 0xca DEX
+	func(cpu *CPU6502) {
+		cpu.dex()
+	},
+	// 0xcb is not defined, assign NOP function
 	nop,
+	// 0xcc CPY, absolute
+	func(cpu *CPU6502) {
+		cpu.cpy(cpu.absolute())
+	},
+	// 0xcd CMP, absolute
+	func(cpu *CPU6502) {
+		cpu.cmp(cpu.absolute())
+	},
+	// 0xce DEC, absolute
+	func(cpu *CPU6502) {
+		cpu.dec(cpu.absoluteAddress())
+	},
+	// 0xcf is not defined, assign NOP function
 	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
-	nop,
+
 	// 0xd-
 	nop,
 	nop,

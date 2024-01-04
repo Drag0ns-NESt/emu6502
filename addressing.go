@@ -12,6 +12,18 @@ func (cpu *CPU6502) absoluteAddress() uint16 {
 	return higher<<8 | lower
 }
 
+// absoluteAddressX returns next operation argument address using absolute, X
+// addressing mode, Updates PC
+func (cpu *CPU6502) absoluteAddressX() uint16 {
+	return cpu.absoluteAddress() + uint16(cpu.X)
+}
+
+// absoluteAddressY returns next operation argument address using absolute, Y
+// addressing mode, Updates PC
+func (cpu *CPU6502) absoluteAddressY() uint16 {
+	return cpu.absoluteAddress() + uint16(cpu.Y)
+}
+
 // indirectAddress returns address for next operation using indirect addressing
 // mode. Updates PC
 func (cpu *CPU6502) indirectAddress() uint16 {
@@ -38,16 +50,10 @@ func (cpu *CPU6502) indirectIndexedAddress() uint16 {
 	return uint16(cpu.zeroPage() + cpu.Y)
 }
 
-// absoluteAddressX returns next operation argument address using absolute, X
-// addressing mode, Updates PC
-func (cpu *CPU6502) absoluteAddressX() uint16 {
-	return cpu.absoluteAddress() + uint16(cpu.X)
-}
-
-// absoluteAddressY returns next operation argument address using absolute, Y
-// addressing mode, Updates PC
-func (cpu *CPU6502) absoluteAddressY() uint16 {
-	return cpu.absoluteAddress() + uint16(cpu.Y)
+// zeroPageAddress returns address for next operation using zero page addressing
+// mode. Updates PC
+func (cpu *CPU6502) zeroPageAddress() uint16 {
+	return cpu.Memory[cpu.PC]
 }
 
 // immediate is used to get argument for operation using immediate addressing mode
@@ -113,7 +119,7 @@ func (cpu *CPU6502) zeroPage() uint8 {
 	cpu.PC += 1
 
 	// Getting zero-page address from argument
-	return cpu.Memory[cpu.Memory[cpu.PC]]
+	return cpu.Memory[cpu.zeroPageAddress()]
 }
 
 // zeroPageX is used to get argument for operation using (zero page + X) addressing mode.
@@ -122,7 +128,7 @@ func (cpu *CPU6502) zeroPageX() uint8 {
 	cpu.PC += 1
 
 	// Getting  zero-page address from argument
-	return cpu.Memory[cpu.Memory[cpu.PC]+cpu.X]
+	return cpu.Memory[cpu.zeroPageAddress()+uint16(cpu.X)]
 }
 
 // zeroPageY is used to get argument for operation using (zero page + Y) addressing mode.
@@ -131,7 +137,7 @@ func (cpu *CPU6502) zeroPageY() uint8 {
 	cpu.PC += 1
 
 	// Getting  zero-page address from argument
-	return cpu.Memory[cpu.Memory[cpu.PC]+cpu.Y]
+	return cpu.Memory[cpu.zeroPageAddress()+uint16(cpu.Y)]
 }
 
 // executeWithAccumulator is used for operations for performing operations and than

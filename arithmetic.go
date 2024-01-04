@@ -26,10 +26,37 @@ func (cpu *CPU6502) adc(arg uint8) {
 	// TODO: decimal mode. mb someday...
 }
 
+// dec performs DEC (DECrement memory by one) operation
+func (cpu *CPU6502) dec(address uint16) {
+	cpu.PC += 1
+	cpu.Memory[address] -= 1
+
+	cpu.Z = cpu.Memory[address] == 0
+	cpu.N = (cpu.Memory[address] & 0x80) != 0
+}
+
+// dex performs DEX (DEcrement X) operation
+func (cpu *CPU6502) dex() {
+	cpu.PC += 1
+	cpu.X -= 1
+
+	cpu.Z = cpu.X == 0
+	cpu.N = (cpu.X & 0x80) != 0
+}
+
 // dey performs DEY (DEcrement Y) operation
 func (cpu *CPU6502) dey() {
 	cpu.PC += 1
 	cpu.Y -= 1
+
+	cpu.Z = cpu.Y == 0
+	cpu.N = (cpu.Y & 0x80) != 0
+}
+
+// iny performs INY (INcrement Y) operation
+func (cpu *CPU6502) iny() {
+	cpu.PC += 1
+	cpu.Y += 1
 
 	cpu.Z = cpu.Y == 0
 	cpu.N = (cpu.Y & 0x80) != 0
