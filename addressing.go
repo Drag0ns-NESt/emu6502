@@ -53,7 +53,15 @@ func (cpu *CPU6502) indirectIndexedAddress() uint16 {
 // zeroPageAddress returns address for next operation using zero page addressing
 // mode. Updates PC
 func (cpu *CPU6502) zeroPageAddress() uint16 {
-	return cpu.Memory[cpu.PC]
+	cpu.PC += 1
+	return uint16(cpu.Memory[cpu.PC])
+}
+
+// zeroPageXAddress returns address for next operation using zero page + X addressing
+// mode. Updates PC
+func (cpu *CPU6502) zeroPageXAddress() uint16 {
+	cpu.PC += 1
+	return uint16(cpu.Memory[cpu.PC] + cpu.X)
 }
 
 // immediate is used to get argument for operation using immediate addressing mode
@@ -116,19 +124,13 @@ func (cpu *CPU6502) relative() uint16 {
 // zeroPage is used to get argument for operation using zero page addressing mode.
 // Updates PC
 func (cpu *CPU6502) zeroPage() uint8 {
-	cpu.PC += 1
-
-	// Getting zero-page address from argument
 	return cpu.Memory[cpu.zeroPageAddress()]
 }
 
 // zeroPageX is used to get argument for operation using (zero page + X) addressing mode.
 // Updates PC
 func (cpu *CPU6502) zeroPageX() uint8 {
-	cpu.PC += 1
-
-	// Getting  zero-page address from argument
-	return cpu.Memory[cpu.zeroPageAddress()+uint16(cpu.X)]
+	return cpu.Memory[cpu.zeroPageXAddress()]
 }
 
 // zeroPageY is used to get argument for operation using (zero page + Y) addressing mode.
@@ -184,18 +186,13 @@ func (cpu *CPU6502) executeWithIndirectIndexed(operation func(uint8) uint8) {
 // executeWithZeroPage is used for performing operations and than storing result
 // using zeropage address. Updates PC
 func (cpu *CPU6502) executeWithZeroPage(operation func(value uint8) uint8) {
-	cpu.PC += 1
-
-	// Get the address once so that we can use it for both lookup and store
-	address := cpu.Memory[cpu.PC]
+	address := cpu.zeroPageAddress()
 	cpu.Memory[address] = operation(cpu.Memory[address])
 }
 
 // executeWithZeroPageX is used for performing operations and than storing result
 // using zeropage, X address. Updates PC
 func (cpu *CPU6502) executeWithZeroPageX(operation func(value uint8) uint8) {
-	cpu.PC += 1
-
-	address := cpu.Memory[cpu.Memory[cpu.PC]+cpu.X]
+	address := cpu.zeroPageXAddress()
 	cpu.Memory[address] = operation(cpu.Memory[address])
 }

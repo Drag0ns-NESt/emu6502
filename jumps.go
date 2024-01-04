@@ -38,6 +38,15 @@ func (cpu *CPU6502) bmi(address uint16) {
 	}
 }
 
+// bne executes BNE (Branch on Not Equal/Branch on Not zEro) instruction on a given
+// address setting program counter if zero flag is not set
+func (cpu *CPU6502) bne(address uint16) {
+	cpu.PC += 1
+	if !cpu.Z {
+		cpu.PC = address
+	}
+}
+
 // bvc executes BVC (Branch on overflow(V) Clear) instructions on a given address
 // setting program counter if overflow flag is clear
 func (cpu *CPU6502) bvc(address uint16) {

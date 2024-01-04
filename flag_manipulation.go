@@ -15,10 +15,16 @@ func (cpu *CPU6502) clc() {
 	cpu.C = false
 }
 
-// cli executes CLI (CLear Interrupt disable bit)
+// cli executes CLI (CLear Interrupt disable bit) instruction
 func (cpu *CPU6502) cli() {
 	cpu.PC += 1
 	cpu.I = false
+}
+
+// cld executes CLD (Clear Decimal) instruction
+func (cpu *CPU6502) cld() {
+	cpu.PC += 1
+	cpu.D = true
 }
 
 // cli executes CLV (CLear oVerflow flag)
