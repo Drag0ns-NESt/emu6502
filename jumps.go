@@ -18,16 +18,6 @@ func (cpu *CPU6502) bcs(address uint16) {
 	}
 }
 
-// bpl executes BPL instruction on a given address setting program counter to it
-// if negative flag is not set.
-func (cpu *CPU6502) bpl(address uint16) {
-	cpu.PC += 1
-
-	if !cpu.N {
-		cpu.PC = address
-	}
-}
-
 // bmi executes BMI (Branch on Minus) instructions on a given address setting
 // program counter if negative flag is set
 func (cpu *CPU6502) bmi(address uint16) {
@@ -38,11 +28,31 @@ func (cpu *CPU6502) bmi(address uint16) {
 	}
 }
 
+// beq executes BEQ (Branch on EQual/Branch on zEro) instruction on a given address
+// setting program counter if zero flag is set
+func (cpu *CPU6502) beq(address uint16) {
+	cpu.PC += 1
+
+	if cpu.Z {
+		cpu.PC = address
+	}
+}
+
 // bne executes BNE (Branch on Not Equal/Branch on Not zEro) instruction on a given
 // address setting program counter if zero flag is not set
 func (cpu *CPU6502) bne(address uint16) {
 	cpu.PC += 1
 	if !cpu.Z {
+		cpu.PC = address
+	}
+}
+
+// bpl executes BPL instruction on a given address setting program counter to it
+// if negative flag is not set.
+func (cpu *CPU6502) bpl(address uint16) {
+	cpu.PC += 1
+
+	if !cpu.N {
 		cpu.PC = address
 	}
 }

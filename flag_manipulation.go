@@ -45,6 +45,12 @@ func (cpu *CPU6502) sei() {
 	cpu.I = true
 }
 
+// sed executes SED (SEt Desimal flag) instruction
+func (cpu *CPU6502) sed() {
+	cpu.PC += 1
+	cpu.D = true
+}
+
 // cpuStatusToByte converts CPU status to byte format
 func (cpu *CPU6502) cpuStatusToByte() uint8 {
 	status := uint8(0x20) // Bit 5 is always set for the 6502
