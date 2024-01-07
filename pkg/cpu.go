@@ -72,3 +72,18 @@ func NewCPU6502() *CPU6502 {
 		Memory: NewRawArrayMemory(),
 	}
 }
+
+// ExecuteNext runs next instruction at which PC currently points
+func (cpu *CPU6502) ExecuteNext() {
+	opcode := cpu.Memory.Read(cpu.PC)
+
+	opcodeFunctions[opcode](cpu)
+}
+
+// ExecuteN is convenience function that runs next N instructions starting with
+// instruction at [PC]
+func (cpu *CPU6502) ExecuteN(n int) {
+	for i := 0; i <= n; i++ {
+		cpu.ExecuteNext()
+	}
+}
