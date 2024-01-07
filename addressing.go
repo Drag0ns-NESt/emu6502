@@ -4,10 +4,10 @@ package emu6502
 // addressing mode. Updates PC
 func (cpu *CPU6502) absoluteAddress() uint16 {
 	cpu.PC += 1
-	lower := uint16(cpu.Memory[cpu.PC])
+	lower := uint16(cpu.Memory.Read(cpu.PC))
 
 	cpu.PC += 1
-	higher := uint16(cpu.Memory[cpu.PC])
+	higher := uint16(cpu.Memory.Read(cpu.PC))
 
 	return higher<<8 | lower
 }
@@ -28,8 +28,8 @@ func (cpu *CPU6502) absoluteAddressY() uint16 {
 // mode. Updates PC
 func (cpu *CPU6502) indirectAddress() uint16 {
 	initialAddress := cpu.absoluteAddress()
-	lower := uint16(cpu.Memory[initialAddress])
-	higher := uint16(cpu.Memory[initialAddress+1])
+	lower := uint16(cpu.Memory.Read(initialAddress))
+	higher := uint16(cpu.Memory.Read(initialAddress + 1))
 
 	return higher<<8 | lower
 }
@@ -41,7 +41,7 @@ func (cpu *CPU6502) indexedIndirectAddress() uint16 {
 	address := uint16(cpu.zeroPageX())
 
 	// Return indirect address
-	return uint16(cpu.Memory[address+1])<<8 + uint16(cpu.Memory[address])
+	return uint16(cpu.Memory.Read(address+1))<<8 + uint16(cpu.Memory.Read(address))
 }
 
 // indirectIndexedAddress returns address for next operation using indirect
@@ -54,14 +54,14 @@ func (cpu *CPU6502) indirectIndexedAddress() uint16 {
 // mode. Updates PC
 func (cpu *CPU6502) zeroPageAddress() uint16 {
 	cpu.PC += 1
-	return uint16(cpu.Memory[cpu.PC])
+	return uint16(cpu.Memory.Read(cpu.PC))
 }
 
 // zeroPageXAddress returns address for next operation using zero page + X addressing
 // mode. Updates PC
 func (cpu *CPU6502) zeroPageXAddress() uint16 {
 	cpu.PC += 1
-	return uint16(cpu.Memory[cpu.PC] + cpu.X)
+	return uint16(cpu.Memory.Read(cpu.PC) + cpu.X)
 }
 
 // immediate is used to get argument for operation using immediate addressing mode
@@ -69,37 +69,37 @@ func (cpu *CPU6502) zeroPageXAddress() uint16 {
 func (cpu *CPU6502) immediate() uint8 {
 	cpu.PC += 1
 
-	return cpu.Memory[cpu.PC]
+	return cpu.Memory.Read(cpu.PC)
 }
 
 // absolute is used to get argument for operation using absolute addressing mode
 // getting value from 2-byte address. Updates PC
 func (cpu *CPU6502) absolute() uint8 {
-	return cpu.Memory[cpu.absoluteAddress()]
+	return cpu.Memory.Read(cpu.absoluteAddress())
 }
 
 // absoluteX is used to get argument for operation using absolute addressing mode
 // getting value from 2-byte address plus X register. Updates PC
 func (cpu *CPU6502) absoluteX() uint8 {
-	return cpu.Memory[cpu.absoluteAddressX()]
+	return cpu.Memory.Read(cpu.absoluteAddressX())
 }
 
 // absoluteY is used to get argument for operation using absolute addressing mode
 // getting value from 2-byte address plus value in Y register. Updates PC
 func (cpu *CPU6502) absoluteY() uint8 {
-	return cpu.Memory[cpu.absoluteAddressY()]
+	return cpu.Memory.Read(cpu.absoluteAddressY())
 }
 
 // indexedIndirect is used to get argument for operation using indexedIndirect ($address, X)
 // addressing. Updates PC
 func (cpu *CPU6502) indexedIndirect() uint8 {
-	return cpu.Memory[cpu.indexedIndirectAddress()]
+	return cpu.Memory.Read(cpu.indexedIndirectAddress())
 }
 
 // indirectIndexed is used to get argument for operation using indirect indexed ($address), Y
 // addressing. Updates PC
 func (cpu *CPU6502) indirectIndexed() uint8 {
-	return cpu.Memory[cpu.indirectIndexedAddress()]
+	return cpu.Memory.Read(cpu.indirectIndexedAddress())
 }
 
 // relative returns relative to current PC address that can be used by controlling
@@ -112,7 +112,7 @@ func (cpu *CPU6502) relative() uint16 {
 
 	// +2 because we start to count after the instruction ([Instruction] [Relative argument])
 	// we assume all controling instructions will take 2 byte
-	offset := int16(int8(cpu.Memory[cpu.PC])) + 2
+	offset := int16(int8(cpu.Memory.Read(cpu.PC))) + 2
 
 	value := uint16(int16(cpu.PC) + offset)
 
@@ -124,13 +124,13 @@ func (cpu *CPU6502) relative() uint16 {
 // zeroPage is used to get argument for operation using zero page addressing mode.
 // Updates PC
 func (cpu *CPU6502) zeroPage() uint8 {
-	return cpu.Memory[cpu.zeroPageAddress()]
+	return cpu.Memory.Read(cpu.zeroPageAddress())
 }
 
 // zeroPageX is used to get argument for operation using (zero page + X) addressing mode.
 // Updates PC
 func (cpu *CPU6502) zeroPageX() uint8 {
-	return cpu.Memory[cpu.zeroPageXAddress()]
+	return cpu.Memory.Read(cpu.zeroPageXAddress())
 }
 
 // zeroPageY is used to get argument for operation using (zero page + Y) addressing mode.
@@ -139,7 +139,7 @@ func (cpu *CPU6502) zeroPageY() uint8 {
 	cpu.PC += 1
 
 	// Getting  zero-page address from argument
-	return cpu.Memory[cpu.zeroPageAddress()+uint16(cpu.Y)]
+	return cpu.Memory.Read(cpu.zeroPageAddress() + uint16(cpu.Y))
 }
 
 // executeWithAccumulator is used for operations for performing operations and than
@@ -152,47 +152,47 @@ func (cpu *CPU6502) executeWithAccumulator(operation func(value uint8) uint8) {
 // using zeropage address. Updates PC
 func (cpu *CPU6502) executeWithAbsolute(operation func(value uint8) uint8) {
 	address := cpu.absoluteAddress()
-	cpu.Memory[address] = operation(cpu.Memory[address])
+	cpu.Memory.Write(address, operation(cpu.Memory.Read(address)))
 }
 
 // executeWithAbsoluteX is used for performing operations and then storing result
 // using zeropage address plus X register. Updates PC
 func (cpu *CPU6502) executeWithAbsoluteX(operation func(value uint8) uint8) {
 	address := cpu.absoluteAddressX()
-	cpu.Memory[address] = operation(cpu.Memory[address])
+	cpu.Memory.Write(address, operation(cpu.Memory.Read(address)))
 }
 
 // executeWithAbsoluteY is used for performing operations and then storing result
 // using zeropage address plus Y register. Updates PC
 func (cpu *CPU6502) executeWithAbsoluteY(operation func(value uint8) uint8) {
 	address := cpu.absoluteAddressY()
-	cpu.Memory[address] = operation(cpu.Memory[address])
+	cpu.Memory.Write(address, operation(cpu.Memory.Read(address)))
 }
 
 // executeWithIndexedIndirect is used for performing operations and then storing result
 // using indexed indirect addressing mode (address, X). Update PC
 func (cpu *CPU6502) executeWithIndexedIndirect(operation func(uint8) uint8) {
 	address := cpu.indexedIndirectAddress()
-	cpu.Memory[address] = operation(cpu.Memory[address])
+	cpu.Memory.Write(address, operation(cpu.Memory.Read(address)))
 }
 
 // exectureWithIndirectIndexed is used for performing operations and then storing result
 // using indirect indexed addressing mode (address), Y. Update PC
 func (cpu *CPU6502) executeWithIndirectIndexed(operation func(uint8) uint8) {
 	address := cpu.indirectIndexedAddress()
-	cpu.Memory[address] = operation(cpu.Memory[address])
+	cpu.Memory.Write(address, operation(cpu.Memory.Read(address)))
 }
 
 // executeWithZeroPage is used for performing operations and than storing result
 // using zeropage address. Updates PC
 func (cpu *CPU6502) executeWithZeroPage(operation func(value uint8) uint8) {
 	address := cpu.zeroPageAddress()
-	cpu.Memory[address] = operation(cpu.Memory[address])
+	cpu.Memory.Write(address, operation(cpu.Memory.Read(address)))
 }
 
 // executeWithZeroPageX is used for performing operations and than storing result
 // using zeropage, X address. Updates PC
 func (cpu *CPU6502) executeWithZeroPageX(operation func(value uint8) uint8) {
 	address := cpu.zeroPageXAddress()
-	cpu.Memory[address] = operation(cpu.Memory[address])
+	cpu.Memory.Write(address, operation(cpu.Memory.Read(address)))
 }

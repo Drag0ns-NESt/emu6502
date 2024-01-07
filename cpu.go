@@ -47,7 +47,7 @@ type CPU6502 struct {
 	N bool
 
 	// Memory represents a memory used for storing
-	Memory [0x10000]byte
+	Memory Memory
 }
 
 func nop(cpu *CPU6502) {
@@ -69,6 +69,6 @@ func NewCPU6502() *CPU6502 {
 		D:      false,
 		V:      false,
 		N:      false,
-		Memory: [0x10000]byte{},
+		Memory: NewRawArrayMemory(),
 	}
 }

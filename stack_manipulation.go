@@ -4,14 +4,14 @@ const STACK_BOTTOM = 0x100
 
 // pushToStack pushes a given value to stack
 func (cpu *CPU6502) pushToStack(value uint8) {
-	cpu.Memory[STACK_BOTTOM+uint16(cpu.SP)] = value
+	cpu.Memory.Write(STACK_BOTTOM+uint16(cpu.SP), value)
 	cpu.SP--
 }
 
 // pullFromStack pulls a top value from stack
 func (cpu *CPU6502) pullFromStack() uint8 {
 	cpu.SP++
-	return cpu.Memory[STACK_BOTTOM+uint16(cpu.SP)]
+	return cpu.Memory.Read(STACK_BOTTOM + uint16(cpu.SP))
 }
 
 // pushToStack16 pushes two bytes to stack. Higher byte will be pushed first
@@ -45,7 +45,7 @@ func (cpu *CPU6502) brk() {
 	cpu.I = true
 
 	// Load Interrupt Vector (0xFFFE/F) into PC for Interrupt Service Routine (ISR)
-	cpu.PC = uint16(cpu.Memory[0xFFFF])<<8 | uint16(cpu.Memory[0xFFFE])
+	cpu.PC = uint16(cpu.Memory.Read(0xFFFF)<<8) | uint16(cpu.Memory.Read(0xFFFE))
 }
 
 // pha executes PHA instruction pushing accumulator register to stack
