@@ -152,6 +152,8 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.executeWithAbsolute(cpu.rol)
 	},
+	// 0x2f is not defined, assign NOP function
+	nop,
 	// 0x30 BMI, relative
 	func(cpu *CPU6502) {
 		cpu.bmi(cpu.relative())
@@ -301,6 +303,7 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 		cpu.executeWithAbsoluteX(cpu.lsr)
 	},
 	// 0x5f is not defined, assign NOP function
+	nop,
 
 	// 0x60 RTS
 	func(cpu *CPU6502) {
@@ -821,5 +824,6 @@ var opcodeFunctions [0x100]func(cpu *CPU6502) = [0x100]func(cpu *CPU6502){
 	func(cpu *CPU6502) {
 		cpu.executeWithAbsoluteX(cpu.inc)
 	},
+	// 0xff is not defined, assign NOP function
 	nop,
 }
