@@ -37,6 +37,24 @@ func TestMovingSequence(t *testing.T) {
 	cpu.assertMemoryEquals(t, 0x200, 0x01, 0x05, 0x08)
 }
 
+func TestMovingSequence2(t *testing.T) {
+	cpu := NewCPU6502()
+
+	cpu.PC = 0x600
+	bytecode := []byte{
+		0xa2, 0x01, 0xa9, 0xaa,
+		0x95, 0xa0, 0xe8, 0x95,
+		0xa0,
+	}
+
+	LoadAndExecute(cpu, bytecode)
+
+	cpu.assertAEquals(t, 0xaa)
+	cpu.assertXEquals(t, 0x02)
+	cpu.assertPCEquals(t, 0x609)
+	cpu.assertMemoryEquals(t, 0x00a0, 0x00, 0xaa, 0xaa)
+}
+
 func TestArithmetics(t *testing.T) {
 	cpu := setupCPU()
 
