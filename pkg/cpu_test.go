@@ -83,3 +83,54 @@ func TestBranching(t *testing.T) {
 
 	cpu.assertMemoryEquals(t, 0x0200, 0x03, 0x03)
 }
+
+func TestRelativeAddressingSequence(t *testing.T) {
+	cpu := setupCPU()
+
+	LoadAndExecute(cpu, []byte{
+		0xa9, 0x01, 0xc9, 0x02,
+		0xd0, 0x02, 0x85, 0x22,
+		0x00,
+	})
+
+	cpu.assertAEquals(t, 0x01)
+	cpu.assertNegativeEquals(t, true)
+	cpu.assertPCEquals(t, 0x0609)
+
+	cpu.assertMemoryEquals(t, 0x0022, 0x00)
+}
+
+func TestIndirectAddressingSequence(t *testing.T) {
+	cpu := setupCPU()
+
+	LoadAndExecute(cpu, []byte{
+		0xa9, 0x01, 0x85, 0xf0,
+		0xa9, 0xcc, 0x85, 0xf1,
+		0x6c, 0xf0, 0x00,
+	})
+
+	cpu.assertAEquals(t, 0xcc)
+	cpu.assertPCEquals(t, 0xcc01)
+
+	cpu.assertMemoryEquals(t, 0x00f0, 0x01, 0xcc)
+}
+
+func TestIndexedIndirectAddressingSequence(t *testing.T) {
+	cpu := setupCPU()
+
+	LoadAndExecute(cpu, []byte{
+		0xa2, 0x01, 0xa9, 0x05,
+		0x85, 0x01, 0xa9, 0x07,
+		0x85, 0x02, 0xa0, 0x0a,
+		0x8c, 0x05, 0x07, 0xa1,
+		0x00,
+	})
+
+	cpu.assertAEquals(t, 0x0a)
+	cpu.assertXEquals(t, 0x01)
+	cpu.assertYEquals(t, 0x0a)
+	cpu.assertPCEquals(t, 0x0611)
+
+	cpu.assertMemoryEquals(t, 0x00, 0x00, 0x05, 0x07)
+	cpu.assertMemoryEquals(t, 0x0a)
+}

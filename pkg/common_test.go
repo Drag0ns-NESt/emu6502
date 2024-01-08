@@ -26,6 +26,12 @@ func (cpu *CPU6502) assertXEquals(t *testing.T, value uint8) {
 	}
 }
 
+func (cpu *CPU6502) assertYEquals(t *testing.T, value uint8) {
+	if cpu.Y != value {
+		t.Errorf("Value in Y register is expected to be equal to 0x%x. Actual: 0x%x", value, cpu.Y)
+	}
+}
+
 func (cpu *CPU6502) assertPCEquals(t *testing.T, value uint16) {
 	if cpu.PC != value {
 		t.Errorf("Value in program counter is expected to be equal to 0x%x. Actual: 0x%x", value, cpu.PC)
@@ -35,6 +41,12 @@ func (cpu *CPU6502) assertPCEquals(t *testing.T, value uint16) {
 func (cpu *CPU6502) assertCarryEquals(t *testing.T, value bool) {
 	if cpu.C != value {
 		t.Errorf("Carry flag is expected to be equal to %t. Actual: %t", value, cpu.C)
+	}
+}
+
+func (cpu *CPU6502) assertNegativeEquals(t *testing.T, value bool) {
+	if cpu.N != value {
+		t.Errorf("Negative flag is expected to be equal to %t. Actual: %t", value, cpu.N)
 	}
 }
 
