@@ -44,8 +44,9 @@ func (cpu *CPU6502) brk() {
 	// Set Interrupt Disable (I) flag
 	cpu.I = true
 
+	// TODO: figure out what is should be done with this one
 	// Load Interrupt Vector (0xFFFE/F) into PC for Interrupt Service Routine (ISR)
-	cpu.PC = uint16(cpu.Memory.Read(0xFFFF)<<8) | uint16(cpu.Memory.Read(0xFFFE))
+	// cpu.PC = uint16(cpu.Memory.Read(0xFFFF))<<8 | uint16(cpu.Memory.Read(0xFFFE))
 }
 
 // pha executes PHA instruction pushing accumulator register to stack

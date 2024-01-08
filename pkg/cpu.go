@@ -87,3 +87,20 @@ func (cpu *CPU6502) ExecuteN(n int) {
 		cpu.ExecuteNext()
 	}
 }
+
+// LoadAndExecute is convenience function that loads bytes to memory at address
+// at which PC points and executes until PC exceeds the last of them (be careful
+// with jumps)
+func LoadAndExecute(cpu *CPU6502, bytecode []byte) error {
+	err := BulkWrite(cpu.Memory, cpu.PC, bytecode...)
+	if err != nil {
+		return err
+	}
+
+	end := cpu.PC + uint16(len(bytecode))
+	for cpu.PC < end {
+		cpu.ExecuteNext()
+	}
+
+	return nil
+}
