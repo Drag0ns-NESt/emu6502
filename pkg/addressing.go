@@ -109,14 +109,13 @@ func (cpu *CPU6502) relative() uint16 {
 	// 0xfe = -2 = 0b1111_1110
 	// 0xfd = -3 = 0b1111_1101
 	// 0xfc = -4 = 0b1111_1100
+	cpu.PC += 1
 
 	// +2 because we start to count after the instruction ([Instruction] [Relative argument])
-	// we assume all controling instructions will take 2 byte
-	offset := int16(int8(cpu.Memory.Read(cpu.PC))) + 2
+	// we assume all controling instructions will take 2 byte. And one byte we already counted
+	offset := int16(int8(cpu.Memory.Read(cpu.PC))) + 1
 
 	value := uint16(int16(cpu.PC) + offset)
-
-	cpu.PC += 1
 
 	return value
 }
