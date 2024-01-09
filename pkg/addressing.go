@@ -47,7 +47,9 @@ func (cpu *CPU6502) indexedIndirectAddress() uint16 {
 // indirectIndexedAddress returns address for next operation using indirect
 // indexed addressing mode (address, Y). Updates PC
 func (cpu *CPU6502) indirectIndexedAddress() uint16 {
-	return uint16(cpu.zeroPage() + cpu.Y)
+	address := cpu.zeroPageAddress()
+	address = uint16(cpu.Memory.Read(address+1))<<8 + uint16(cpu.Memory.Read(address))
+	return address + uint16(cpu.Y)
 }
 
 // zeroPageAddress returns address for next operation using zero page addressing
