@@ -37,9 +37,10 @@ func (cpu *CPU6502) brk() {
 	// Increment PC to point to the next instruction after BRK
 	cpu.PC++
 
-	cpu.pushToStack16(cpu.PC)
+	// TODO:
+	// cpu.pushToStack16(cpu.PC)
 	// Set Break flag (B) and push status onto Stack
-	cpu.pushToStack(cpu.cpuStatusToByte() | 0x10)
+	// cpu.pushToStack(cpu.cpuStatusToByte() | 0x10)
 
 	// Set Interrupt Disable (I) flag
 	cpu.I = true

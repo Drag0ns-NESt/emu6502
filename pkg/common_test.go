@@ -32,6 +32,12 @@ func (cpu *CPU6502) assertYEquals(t *testing.T, value uint8) {
 	}
 }
 
+func (cpu *CPU6502) assertSPEquals(t *testing.T, value uint8) {
+	if cpu.SP != value {
+		t.Errorf("Value in SP register is expected to be equal to 0x%x. Actual: 0x%x", value, cpu.SP)
+	}
+}
+
 func (cpu *CPU6502) assertPCEquals(t *testing.T, value uint16) {
 	if cpu.PC != value {
 		t.Errorf("Value in program counter is expected to be equal to 0x%x. Actual: 0x%x", value, cpu.PC)

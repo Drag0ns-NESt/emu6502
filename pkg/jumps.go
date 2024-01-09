@@ -87,8 +87,6 @@ func (cpu *CPU6502) jmp(address uint16) {
 // jsr executes JSR instruction pushing return address to stack and jumping on a
 // given address
 func (cpu *CPU6502) jsr(address uint16) {
-	cpu.PC += 1
-
 	cpu.pushToStack16(cpu.PC)
 	cpu.PC = address
 }
@@ -97,4 +95,5 @@ func (cpu *CPU6502) jsr(address uint16) {
 // a stack and setting it to program counter
 func (cpu *CPU6502) rts() {
 	cpu.PC = cpu.pullFromStack16()
+	cpu.PC += 1
 }
